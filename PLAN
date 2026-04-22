@@ -1,0 +1,460 @@
+Got it 😄🚁 — you want the **full roadmap upfront**, so you can see the entire journey before we go step-by-step.
+
+I’ll give you a **complete phased plan from start → submission**, but still structured so you can execute it cleanly later.
+
+---
+
+# 🚁 DRONE ROUTING PROJECT — FULL MASTER PLAN
+
+We’ll break the project into **7 clear phases**:
+
+---
+
+# 🧱 PHASE 1 — Parser + Graph Builder (FOUNDATION)
+
+## 🎯 Goal
+
+Convert the input file → structured graph in memory.
+
+---
+
+## 🧠 What you must learn
+
+* File parsing (line-by-line)
+* String processing
+* Object-Oriented Programming
+* Basic validation rules
+
+---
+
+## 🛠️ Build
+
+### Classes:
+
+* `Zone`
+* `Connection`
+* `Graph`
+* `Parser`
+
+---
+
+## 📦 Responsibilities
+
+### Parser:
+
+* Read file
+* Extract:
+
+  * nb_drones
+  * zones
+  * connections
+* Parse metadata:
+
+  * zone type
+  * max_drones
+  * max_link_capacity
+* Validate:
+
+  * unique zones
+  * valid syntax
+  * correct types
+
+---
+
+## ✅ Output
+
+You can load a map and get:
+
+* zones dictionary
+* adjacency list graph
+* clean object model
+
+---
+
+## 🧪 Done when:
+
+✔ map loads without crash
+✔ graph structure is correct
+✔ debug print works
+
+---
+
+# 🧠 PHASE 2 — Graph Representation + Rules Engine
+
+## 🎯 Goal
+
+Turn parsed data into a **usable simulation graph**
+
+---
+
+## 🧠 Learn
+
+* adjacency lists
+* weighted graphs
+* constraints modeling
+
+---
+
+## 🛠️ Build
+
+Enhance `Graph`:
+
+* adjacency list:
+
+```python
+graph[z] = [(neighbor, cost, connection)]
+```
+
+---
+
+## ⚙️ Add rules:
+
+### Zone rules:
+
+* blocked → ignored
+* restricted → cost = 2
+* normal → cost = 1
+* priority → cost = 1 but weighted lower in pathfinding
+
+### Capacity system:
+
+* zone occupancy tracking
+* connection capacity tracking
+
+---
+
+## ✅ Output
+
+Graph is now:
+
+* weighted
+* constraint-aware
+* simulation-ready
+
+---
+
+# 🧭 PHASE 3 — Pathfinding Engine
+
+## 🎯 Goal
+
+Compute best paths for drones
+
+---
+
+## 🧠 Learn
+
+* Dijkstra algorithm
+* priority queue (heapq)
+* weighted shortest path
+
+---
+
+## 🛠️ Build
+
+### Function:
+
+```python
+find_path(start, goal)
+```
+
+---
+
+## 💡 Important logic:
+
+* cost includes zone types
+* ignore blocked zones
+* optionally prefer:
+
+  * priority zones
+
+---
+
+## ⚙️ Upgrade (important)
+
+Instead of 1 path → compute:
+
+### MULTI-PATH system:
+
+* k shortest paths OR
+* repeated Dijkstra with blocking OR
+* BFS variants
+
+---
+
+## ✅ Output
+
+You get:
+
+* multiple valid paths
+* ranked by cost
+
+---
+
+# 🤖 PHASE 4 — Drone Scheduler (CORE LOGIC)
+
+## 🎯 Goal
+
+Assign drones to paths efficiently
+
+---
+
+## 🧠 Learn
+
+* greedy algorithms
+* load balancing
+* simulation planning
+
+---
+
+## 🛠️ Build
+
+### Drone system:
+
+```python
+Drone(id, path, position)
+```
+
+### Scheduler:
+
+* assign drones to best available paths
+* balance traffic
+* avoid bottlenecks
+
+---
+
+## 💡 Strategy ideas:
+
+* round-robin path assignment
+* shortest path first
+* congestion-aware routing
+
+---
+
+## ✅ Output
+
+Each drone has:
+
+* assigned path
+* ready state
+
+---
+
+# ⏱️ PHASE 5 — Simulation Engine (MOST IMPORTANT)
+
+## 🎯 Goal
+
+Simulate turn-by-turn movement
+
+---
+
+## 🧠 Learn
+
+* discrete simulation loops
+* state updates
+* conflict resolution
+
+---
+
+## 🛠️ Build
+
+### Simulation loop:
+
+```python
+while not all_drones_finished:
+    compute_moves()
+    resolve_conflicts()
+    update_positions()
+    print_turn()
+```
+
+---
+
+## ⚠️ Rules to handle:
+
+### Zone rules:
+
+* max_drones per zone
+
+### Connection rules:
+
+* max_link_capacity
+
+### Movement:
+
+* 1 turn normal
+* 2 turns restricted (special handling)
+
+---
+
+## 💡 Key challenge:
+
+You must avoid:
+
+* collisions
+* overflows
+* deadlocks
+
+---
+
+## ✅ Output
+
+Step-by-step valid simulation log
+
+---
+
+# 🎨 PHASE 6 — Visualization System
+
+## 🎯 Goal
+
+Make simulation readable & visual
+
+---
+
+## 🧠 Learn
+
+* terminal coloring (ANSI)
+* optional GUI basics
+
+---
+
+## 🛠️ Build
+
+### Terminal version:
+
+* colors per zone type
+* highlight drones
+
+Example:
+
+* 🟢 start
+* 🔴 blocked
+* 🟡 priority
+
+---
+
+## Optional:
+
+* pygame graph visualization
+* network diagram
+
+---
+
+## ✅ Output
+
+Clear visual simulation of movement
+
+---
+
+# ⚡ PHASE 7 — Optimization + Performance
+
+## 🎯 Goal
+
+Make solution fast and efficient
+
+---
+
+## 🧠 Learn
+
+* algorithm complexity
+* caching
+* optimization strategies
+
+---
+
+## 🛠️ Improve:
+
+### Pathfinding:
+
+* cache shortest paths
+* avoid recomputation
+
+### Simulation:
+
+* minimize recalculations
+* efficient occupancy tracking
+
+### Scheduling:
+
+* smarter distribution
+
+---
+
+## 🎯 Targets:
+
+* Easy ≤ 10 turns
+* Medium ≤ 30 turns
+* Hard ≤ 60 turns
+
+---
+
+## ✅ Output
+
+Fast + stable system even on 25 drones
+
+---
+
+# 📦 FINAL STRUCTURE (what your repo looks like)
+
+```
+project/
+│
+├── parser/
+├── graph/
+├── simulation/
+├── drones/
+├── pathfinding/
+├── visualization/
+├── utils/
+│
+├── main.py
+├── Makefile
+├── README.md
+└── maps/
+```
+
+---
+
+# 🧠 BIG PICTURE (VERY IMPORTANT)
+
+You are building 3 systems:
+
+### 1. 🧱 Data system
+
+Parser + Graph
+
+### 2. 🧭 Intelligence system
+
+Pathfinding + Scheduling
+
+### 3. 🎮 Execution system
+
+Simulation + Visualization
+
+---
+
+# 🚨 HOW WE’LL WORK NEXT
+
+Now that you have the full roadmap:
+
+We will go like this:
+
+👉 Phase 1 → build parser properly
+👉 then test it
+👉 then move forward
+
+---
+
+# ❓ Before we start Phase 1 (important)
+
+Answer quickly:
+
+1. Do you understand the 3 systems idea (data / intelligence / simulation)?
+2. Do you want to start coding Phase 1 now?
+3. Are you comfortable using OOP (classes), or should I teach it first?
+
+---
+
+Once you reply, we start building your **real project step-by-step like a pro system 🚁✨**
+
+
+https://chatgpt.com/c/69de7eb1-de60-83ea-92be-66321d99f966
