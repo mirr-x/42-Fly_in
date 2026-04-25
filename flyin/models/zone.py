@@ -1,37 +1,33 @@
-"""
-    This Module is defeining a Zone represents a location on the map
-"""
+"""This module defines a Zone that represents a location on the map."""
+
 from typing import Optional, Tuple
-from enum import Enum
-
-class TypeZone(Enum):
-    """
-        This andicate the type of Zone
-    """
-    NORMAL = 'normal'
-    BLOCKED = 'blocked'
-    RESTRICTED = 'restricted'
-    PRIORITY = 'priority'
-
-
-class RoleZone(Enum):
-    """
-        This andicate the Role of Zone
-    """
-    STARTING = 'starting'
-    REGULAR = 'regular'
-    ENDING = 'ending'
+from flyin._types import RoleZone, TypeZone
 
 
 class Zone:
-    def __init__(self,
+    """Represents a location (zone) on the map.
+
+    Attributes:
+        name: The zone s identifier (unique, human readable string).
+        coordinates: A tuple (x, y) representing the zone s position.
+        role: The zone s role (e.g., STARTING, REGULAR, or ENDING).
+        max_drones: Optional[Maximum number of drones allowed in this zone]
+        color: Optional color code (e.g., '#FF0000') for map rendering.
+        zone_type: Optional[type of zone NORMAL, BLOCKED, RESTRICTED, PRIORITY]
+    """
+
+    def __init__(
+                self,
                 name: str,
                 cord: Tuple[int, int],
-                max_drones: int,
+                role: RoleZone,
+                max_drones: Optional[int] = 1,
                 color: Optional[str] = None,
-                _type: TypeZone = TypeZone.NORMAL) -> None:
-        self._type = _type
+                _type: TypeZone = TypeZone.NORMAL
+                ) -> None:
         self.name = name
         self.cord = cord
+        self.role = role
         self.max_drones = max_drones
         self.color = color
+        self._type = _type
