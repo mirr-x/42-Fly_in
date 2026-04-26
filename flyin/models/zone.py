@@ -1,7 +1,7 @@
 """This module defines a Zone that represents a location on the map."""
 
-from typing import Optional, Tuple
-from flyin._types import RoleZone, TypeZone
+from typing import Optional
+from flyin._types import RoleZone, TypeZone, Cord
 
 
 class Zone:
@@ -19,7 +19,7 @@ class Zone:
     def __init__(
                 self,
                 name: str,
-                cord: Tuple[int, int],
+                cord: Cord,
                 role: RoleZone,
                 max_drones: Optional[int] = 1,
                 color: Optional[str] = None,
