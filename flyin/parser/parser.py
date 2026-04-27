@@ -119,6 +119,15 @@ class Parser:
             raise ValueError(
                 f'Error: Unknowun role type At line {line_n}') from exc
 
+    @staticmethod
+    def _get_max_drones(meta_data: MetaData, line_n) -> int:
+        max_drones_val = meta_data.get('max_drones', 1)
+        if not isinstance(max_drones_val, int):
+            raise ValueError(
+                f'Error: invalid max_drones At line {line_n}'
+            )
+        return max_drones_val
+
     def parsing(self) -> None:
         hups = ('start_hub', 'end_hub', 'hub')
         try:
@@ -136,18 +145,14 @@ class Parser:
                                                                         val,
                                                                         line_n
                                                                     )
-                        max_drones_val = meta_data.get('max_drones', 1)
-                        if not isinstance(max_drones_val, int):
-                            raise ValueError(
-                                f'Error: invalid max_drones At line {line_n}'
-                            )
-                        max_drones = max_drones_val
+                        max_drones_val = Parser._get_max_drones(
+                                                        meta_data, line_n)
                         temp = Zone(
                             name=name,
                             cord=cord,
                             role=role,
-                            max_drones=max_drones,
-                            
+                            max_drones=max_drones_val,
+                            color=
                         )
         except OSError as exc:
             raise ValueError(f'Error: cannot open file {self.file_path}') from exc
