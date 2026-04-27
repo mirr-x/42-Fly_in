@@ -19,8 +19,10 @@ class Parser:
     def _validate_drones(val: str, line_n: int) -> int:
         try:
             v = int(val)
-        except ValueError:
-            raise ValueError(f'Error: number of drones should be included in line {line_n}')
+        except ValueError as exc:
+            raise ValueError(
+                f'Error: number of drones should be included in line {line_n}'
+            ) from exc
         if v <= 0:
             raise ValueError(f'Error: drons cannot be <= 0 At line {line_n}')
         return v
@@ -33,7 +35,8 @@ class Parser:
         parts[0] = (parts[0].strip()).lower()
         parts[1] = (parts[1].strip()).lower()
         if not parts[0] or not parts[1]:
-            raise ValueError(f'Error: missing format <key>: <val> in line {line_n}')
+            raise ValueError(
+                f'Error: missing format <key>: <val> in line {line_n}')
         return parts
 
     @staticmethod  # Err method
@@ -41,8 +44,10 @@ class Parser:
         try:
             v1 = int(x)
             v2 = int(y)
-        except ValueError:
-            raise ValueError(f'Error: Cords should be included At line {line_n}')
+        except ValueError as exc:
+            raise ValueError(
+                f'Error: Cords should be included At line {line_n}'
+            ) from exc
         if v1 <= 0 or v2 <= 0:
             raise ValueError(f'Error: Cords cannot be <= 0 At line {line_n}')
         return (v1, v2)
@@ -51,21 +56,25 @@ class Parser:
     def _get_corect_zone(_type: str, line_n: int) -> TypeZone:
         try:
             return TypeZone(_type)
-        except ValueError:
-            raise ValueError(f'Error: Unknowun zone type At line {line_n}')
+        except ValueError as exc:
+            raise ValueError(
+                f'Error: Unknowun zone type At line {line_n}'
+            ) from exc
 
     @staticmethod
     def _get_corect_color(color: str, line_n: int) -> colorZone:
         try:
             return colorZone(color)
-        except ValueError:
-            raise ValueError(f'Error: Unknowun color type At line {line_n}')
+        except ValueError as exc:
+            raise ValueError(
+                f'Error: Unknowun color type At line {line_n}'
+            ) from exc
 
     @staticmethod
     def _validate_meta_data(val: str, line_n: int) -> MetaData:
         if not (val.startswith('[') and val.endswith(']')):
-            raise ValueError(f'Error: ivalid metaData format At line {line_n}') # *: HANDLE val ERR
-        # 2 TODO: continue validateing zone=<type> and  color=<value> and max_drones=<number>
+            raise ValueError(
+                f'Error: ivalid metaData format At line {line_n}')  # *: HANDLE val ERR
         val = val[1:-1]
         if not val.strip():
             raise ValueError(f'Error: Empty metaData At line {line_n}')
@@ -83,13 +92,22 @@ class Parser:
                 raise ValueError(f'Error: Unknowun metadata At line {line_n}')
         return meta_data
 
-    @staticmethod # Err method
-    def _validate_hup_values(val: str, line_n: int) -> tuple[str, Cord, MetaData]:
-        parts = val.split(' ', 3) # <name> <x> <y> [metadata]
-        if not (3 <= len(parts) <= 4):
-            raise ValueError(f'Error: hub invalid formal <name> <x> <y> optional[metadata] At line {line_n}')
+    @staticmethod  # Err method
+    def _validate_hup_values(
+                            val: str,
+                            line_n: int
+                        ) -> tuple[str, Cord, MetaData]:
+        parts = val.split(' ', 3)  # <name> <x> <y> [metadata]
+        if not 3 <= len(parts) <= 4:
+            raise ValueError(
+                'hub Error: invalid formal <name> <x> <y> '
+                f'optional[metadata] At line {line_n}')
         name = parts[0].strip()
-        cord = Parser._validate_cords(parts[1].strip(), parts[2].strip(), line_n) # *: HANDLE val ERR
+        cord = Parser._validate_cords(
+                                parts[1].strip(),
+                                parts[2].strip(),
+                                line_n
+                            )  # *: HANDLE val ERR
         meta_data = Parser._validate_meta_data(parts[3], line_n)
         return (name, cord, meta_data)
 
@@ -97,30 +115,41 @@ class Parser:
     def _get_corect_role(role: str, line_n: int) -> RoleZone:
         try:
             return RoleZone(role)
-        except ValueError:
-            raise ValueError(f'Error: Unknowun role type At line {line_n}')
+        except ValueError as exc:
+            raise ValueError(
+                f'Error: Unknowun role type At line {line_n}') from exc
 
     def parsing(self) -> None:
+        hups = ('start_hub', 'end_hub', 'hub')
         try:
-            with open(self.file_path, 'r') as f:
+            with open(self.file_path, 'r', encoding='utf-8') as f:
                 for line_n, line in enumerate(f, start=1):
                     striped = line.strip()
                     if not striped or striped.startswith('#'):
                         continue
-                    key, val = self._validate_missing_key_val(striped, line_n) # *: HANDLE FALIURE
+                    key, val = self._validate_missing_key_val(striped, line_n)  # *: HANDLE FALIURE
                     if key == 'nb_drones':
-                        self.nb_drones = self._validate_drones(val, line_n) # *: HANDLE FALIURE
-                    elif key == 'start_hub' or key == 'end_hub' or key == 'hub':
+                        self.nb_drones = self._validate_drones(val, line_n)  # *: HANDLE FALIURE
+                    elif key in hups:
                         role = Parser._get_corect_role(key, line_n)
-                        name, cord, meta_data = Parser._validate_hup_values(val, line_n)
-                        max_drones = meta_data.get('max_drones', 1)
+                        name, cord, meta_data = Parser._validate_hup_values(
+                                                                        val,
+                                                                        line_n
+                                                                    )
+                        max_drones_val = meta_data.get('max_drones', 1)
+                        if not isinstance(max_drones_val, int):
+                            raise ValueError(
+                                f'Error: invalid max_drones At line {line_n}'
+                            )
+                        max_drones = max_drones_val
                         temp = Zone(
                             name=name,
                             cord=cord,
                             role=role,
-                            max_drones=max_drones
+                            max_drones=max_drones,
+                            
                         )
-        except OSError as e:
-            raise ValueError(f'Error: cannot open file {self.file_path}') from e
+        except OSError as exc:
+            raise ValueError(f'Error: cannot open file {self.file_path}') from exc
 
 
