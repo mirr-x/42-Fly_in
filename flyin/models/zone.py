@@ -1,6 +1,6 @@
 """This module defines a Zone that represents a location on the map."""
 
-from typing import Optional
+from flyin._types import Optional
 from flyin._types import RoleZone, TypeZone, Cord
 
 
@@ -31,3 +31,8 @@ class Zone:
         self.max_drones = max_drones
         self.color = color
         self._type = _type
+
+    def __repr__(self) -> str:
+        return (f'Zone(name={self.name}, cord={self.cord}, role={self.role}, '
+                f'max_drones={self.max_drones}, color={self.color}, '
+                f'type={self._type})')
