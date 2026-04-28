@@ -15,12 +15,12 @@ class TypeZone(Enum):
 class RoleZone(Enum):
     """This andicate the Role of Zone"""
 
-    STARTING = 'starting'
-    REGULAR = 'regular'
-    ENDING = 'ending'
+    STARTING = 'start_hub'
+    REGULAR = 'hub'
+    ENDING = 'end_hub'
 
 
-class colorZone(Enum):
+class ColorZone(Enum):
     """This andicate the color of Zone"""
 
     WHITE = 'white'
@@ -40,3 +40,8 @@ class colorZone(Enum):
     NAVY = 'navy'
     TEAL = 'teal'
     OLIVE = 'olive'
+
+
+class MapsTool(Enum):
+    """Used for diffrent enums in maps that dsent has groped enum"""
+    CONNECTION = 'connection'

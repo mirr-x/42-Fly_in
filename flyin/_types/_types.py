@@ -1,7 +1,6 @@
 """This file for Type define"""
 
-from typing import TypeAlias
-from flyin._types import TypeZone, colorZone
+from flyin._types import TypeZone, ColorZone, TypeAlias
 
 Cord: TypeAlias = tuple[int, int]
-MetaData: TypeAlias = dict[str, TypeZone | colorZone | int]
+MetaData: TypeAlias = dict[str, TypeZone | ColorZone | int]
