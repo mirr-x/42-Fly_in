@@ -1,7 +1,8 @@
 # flyin/models/__init__.py
 
-"""Intrnal file for Exporting the Importing"""
+"""Internal file for Exporting the Importing"""
 
 from flyin.models.zone import Zone
+from flyin.models.connection import Connection
 
-__all__ = ['Zone']
+__all__ = ['Zone', 'Connection']
