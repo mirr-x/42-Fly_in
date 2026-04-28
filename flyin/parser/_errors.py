@@ -19,3 +19,9 @@ class InvalidCordsError(ParserError):
 
 class ParserFileNotFoundError(ParserError):
     """ParserFileNotFoundError inherit from ParserError: if file not found"""
+
+
+class InsaneError(ParserError):
+    """InsaneError inherit from ParserError: it will get triggerd if you
+        changed somting in dubug mode
+    """
