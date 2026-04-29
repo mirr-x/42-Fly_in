@@ -13,6 +13,30 @@ import logging
 from flyin.parser import _errors
 from flyin.parser.parser import Parser
 from flyin.graph.graph import Graph
+from flyin.models.zone import Zone
+from flyin.models.connection import Connection
+
+
+def print_zones_and_connections(
+    zones: dict[str, Zone],
+    connections: list[Connection]
+) -> None:
+    """Display the Zones and Conctions
+
+    Args:
+        zones (dict[str, Zone]): zones objects in map
+        connections (list[Connection]): connections objects in map
+    """
+
+    if zones:
+        print('Zones loaded:')
+        for zone in zones.values():
+            print(f'    - {zone.name}')
+    if connections:
+        print('\nConnections:')
+        for conn in connections:
+            print(f'    - {conn.zone_a} ↔ {conn.zone_b}')
+    print()
 
 
 def main() -> None:
@@ -26,9 +50,13 @@ def main() -> None:
     try:
         pars = Parser(sys.argv[1], map_graph=Graph())
         pars.parsing()
+        print_zones_and_connections(pars.graph.zones, pars.graph.connection)
         # import json  ##* delet us
         # with open('mp.json', 'w', encoding='utf-8') as f:   ##*
-        #     a = list(map(lambda z: z.__repr__(), pars.graph.zones.values()))
+        #     a = {k: v.__repr__() for k, v in pars.graph.zones.items()}
+            
+        #     b = {f'{i.zone_a}-{i.zone_b}': i.__repr__() for i in pars.graph.connection}
+        #     a.update(b)
         #     json.dump(a, f, indent=4)  ##*
     except _errors.InsaneError as exc:
         logging.critical('Graph Error: %s', exc)
