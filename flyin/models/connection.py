@@ -1,6 +1,6 @@
 """This module defines a connections between two zones"""
 
-from flyin.models import Zone
+from flyin.models.zone import Zone
 from flyin._types import Optional
 
 
@@ -24,7 +24,7 @@ class Connection:
 
     def __repr__(self) -> str:
         return (
-            f"Connection(zone_a={self.zone_a.name}, "
-            f"zone_b={self.zone_b.name}, "
+            f"Connection(zone_a={self.zone_a}, "
+            f"zone_b={self.zone_b}, "
             f"max_link_capacity={self.max_link_capacity})"
         )
