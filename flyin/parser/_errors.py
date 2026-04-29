@@ -25,3 +25,9 @@ class InsaneError(ParserError):
     """InsaneError inherit from ParserError: it will get triggerd if you
         changed somting in dubug mode
     """
+
+
+class DuplacateZoneError(ParserError):
+    """DuplacateZoneError inherit from ParserError: get triggerd when passing
+        duplucate start or end
+    """
