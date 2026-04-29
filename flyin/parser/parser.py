@@ -1,17 +1,18 @@
 """This Module is used to handle All parsing in Fly-in project"""
 
 
-from flyin.models import Zone
-from flyin.graph import Graph
+from flyin.models.zone import Zone
+from flyin.models.connection import Connection
+from flyin.graph.graph import Graph
 from flyin.parser import _errors
 from flyin._types import TypeZone, RoleZone, MapsTool
 from flyin.parser import (
     _validate_missing_key_val,
-    _get_corect_role,
+    _get_role_and_validate_it,
     _validate_hup_val,
     _get_max_drones,
     _validate_drones,
-    _get_zone_a_and_b
+    _validate_conc_vals
 )
 
 
@@ -27,6 +28,36 @@ class Parser:
         self.file_path = file_path
         self.graph = map_graph
         self.nb_drones = 0
+
+    def _handle_zones(self, key: str, val: str, line_n) -> None:
+        list_zones = list(self.graph.zones.values())
+        role = _get_role_and_validate_it(key, list_zones, line_n)
+        name, cord, meta_data = _validate_hup_val(val, list_zones, line_n)
+        max_drones, color, _type = 1, None, TypeZone.NORMAL
+        if meta_data:
+            max_drones = _get_max_drones(meta_data, line_n)
+            color = meta_data.get('color', None)
+            _type = meta_data.get('type', TypeZone.NORMAL)
+        temp_zone = Zone(
+            name=name,
+            cord=cord,
+            role=role,
+            max_drones=max_drones,
+            color=color,
+            _type=_type
+        )
+        self.graph.add_zone(temp_zone)
+
+    def _handle_connctions(self, val: str, line_n) -> None:
+        zones = list(self.graph.zones.values())
+        zone_a, zone_b, data = _validate_conc_vals(val, zones, line_n)
+        max_capacity = 1
+        if data:
+            max_capacity = data.get('max_link_capacity', 1)
+        tmp_conction = Connection(zone_a, zone_b, max_capacity)
+        self.graph.add_connection(tmp_conction)
+        # TODO: Connections must link only previously defined zones using connection: <zone1>-<zone2> [metadata]
+
 
     def parsing(self) -> None:
         """Parse the map file, validate entries, and extract map data.
@@ -45,26 +76,9 @@ class Parser:
                     if key == 'nb_drones':
                         self.nb_drones = _validate_drones(val, line_n)
                     elif key in RoleZone:
-                        role = _get_corect_role(key, line_n)
-                        name, cord, meta_data = _validate_hup_val(val, line_n)
-                        max_drones, color, _type = None, None, TypeZone.NORMAL
-                        if meta_data:
-                            max_drones = _get_max_drones(meta_data, line_n)
-                            color = meta_data.get('color', None)
-                            _type = meta_data.get('type', TypeZone.NORMAL)
-                        temp_zone = Zone(
-                            name=name,
-                            cord=cord,
-                            role=role,
-                            max_drones=max_drones,
-                            color=color,
-                            _type=_type
-                        )
-                        self.graph.add_zone(temp_zone)
+                        self._handle_zones(key, val, line_n)
                     elif key == MapsTool.CONNECTION.value:
-                        zone_a, zone_b = _get_zone_a_and_b(val, line_n)
-                        # TODO: CONTIMIUE VALIDATING THIS connction
-                        # temp_connection = Connection(zone_a, zone_b)
+                        self._handle_connctions(val, line_n)
                     else:
                         raise _errors.InvalidFormatError(
                             f'Unknowun key At line {line_n}')
