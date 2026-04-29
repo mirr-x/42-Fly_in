@@ -1,0 +1,311 @@
+Good — now we’re entering the part where your project stops being “parser work” and becomes a **real routing system** 🚁🧠
+
+I’ll keep this Phase 2 strictly **design + simulation thinking (no code)** as you asked.
+
+---
+
+# 🚀 PHASE 2 — GRAPH INTELLIGENCE (Core Brain of the System)
+
+## 🧠 What Phase 2 is REALLY about
+
+Right now you already:
+
+* read the map ✔
+* created zones ✔
+* created connections ✔
+* validated input ✔
+
+👉 So Phase 2 is NOT parsing anymore.
+
+### Phase 2 goal:
+
+> Turn your static map into a **navigable brain**
+
+Meaning:
+
+* “Who is connected to who?”
+* “What paths exist?”
+* “What costs more or less?”
+* “What routes are even possible?”
+
+---
+
+# 🧩 BIG IDEA (simple explanation)
+
+Imagine your system like a city:
+
+* Zones = buildings 🏢
+* Connections = roads 🛣️
+
+Phase 1:
+👉 You built the city map
+
+Phase 2:
+👉 You build the GPS system
+
+---
+
+# 🧠 FILES YOU WILL WORK ON IN PHASE 2
+
+## 📍 1. `graph/graph.py` ⭐ MAIN FILE
+
+You will add:
+
+* adjacency system (neighbors)
+* path navigation logic (basic)
+* cost awareness hook
+* helper functions for traversal
+
+👉 This becomes your “brain center”
+
+---
+
+## 📍 2. `models/zone.py`
+
+You will:
+
+* define movement cost behavior
+* keep zone rules clean (normal / restricted / priority / blocked)
+
+👉 Zone becomes “smart entity”
+
+---
+
+## 📍 3. `models/connection.py`
+
+You will:
+
+* ensure connections behave like edges
+* possibly expose traversal info
+
+👉 Connection becomes “road with rules”
+
+---
+
+## 📍 4. (optional now) `utils/`
+
+Only helpers — not core logic yet
+
+---
+
+# 🧪 PHASE 2 SIMULATION (IMPORTANT)
+
+Let’s use your easy map:
+
+```
+start → waypoint1 → waypoint2 → goal
+```
+
+---
+
+# 🧠 STEP 1 — After Phase 1 finishes parsing
+
+You now have:
+
+### Zones:
+
+* start
+* waypoint1
+* waypoint2
+* goal
+
+### Connections:
+
+* start ↔ waypoint1
+* waypoint1 ↔ waypoint2
+* waypoint2 ↔ goal
+
+---
+
+# 🧠 STEP 2 — What Phase 2 builds
+
+Now Graph transforms this into:
+
+```
+start:       [waypoint1]
+waypoint1:   [start, waypoint2]
+waypoint2:   [waypoint1, goal]
+goal:        []
+```
+
+👉 THIS is the key transformation
+
+---
+
+# 🧪 STEP 3 — Mental simulation (what happens internally)
+
+### At start:
+
+Drone position:
+
+```
+D1 at start
+D2 at start
+```
+
+---
+
+### Turn 1 (Graph now used):
+
+System checks:
+
+* neighbors of start → waypoint1
+
+Movement:
+
+```
+D1 → waypoint1
+D2 → waypoint1
+```
+
+BUT WAIT ⚠️
+
+If capacity = 1:
+
+* only 1 drone can enter waypoint1
+
+So system must decide:
+
+* who goes first
+* who waits
+
+👉 THIS is where Phase 2 starts getting interesting
+
+---
+
+### Turn 2:
+
+```
+D1 → waypoint2
+D2 → waypoint1 (or still waiting)
+```
+
+---
+
+### Turn 3:
+
+```
+D1 → goal
+D2 → waypoint2
+```
+
+---
+
+### Turn 4:
+
+```
+D2 → goal
+```
+
+---
+
+# 🧠 WHAT PHASE 2 REALLY ADDS
+
+## Before Phase 2:
+
+You only had structure.
+
+## After Phase 2:
+
+You have behavior:
+
+✔ navigation possible
+✔ neighbors known
+✔ movement planning possible
+✔ cost awareness ready
+
+---
+
+# ⚙️ PHASE 2 CORE FEATURES YOU WILL BUILD
+
+## 🔹 1. Adjacency System
+
+Each zone knows:
+
+> “who can I go to?”
+
+---
+
+## 🔹 2. Neighbor Queries
+
+Graph must answer:
+
+> “what are my possible moves?”
+
+---
+
+## 🔹 3. Movement Cost Awareness
+
+Not yet full algorithm — just rules:
+
+* normal → 1 step
+* restricted → 2 steps
+* priority → preferred path
+* blocked → ignored
+
+---
+
+## 🔹 4. Traversal Readiness
+
+You prepare graph for:
+
+👉 BFS (shortest path)
+👉 Dijkstra (weighted path)
+
+BUT NOT IMPLEMENT THEM FULLY YET
+
+---
+
+# 🧠 WHAT YOU SHOULD THINK IN PHASE 2
+
+Ask yourself:
+
+### ❓ “If a drone is at node X… where can it go?”
+
+### ❓ “Which path is cheaper or better?”
+
+### ❓ “Which zones block movement?”
+
+---
+
+# ⚠️ IMPORTANT DESIGN SHIFT
+
+## Phase 1 mindset:
+
+> “Is input valid?”
+
+## Phase 2 mindset:
+
+> “How do I move through this system?”
+
+---
+
+# 🚀 END OF PHASE 2 SCOPE
+
+By the end of Phase 2, you MUST have:
+
+✔ adjacency list working
+✔ neighbors accessible
+✔ zone rules understood
+✔ cost system prepared
+✔ graph fully navigable
+
+---
+
+# 🧭 BEFORE WE MOVE TO PHASE 3
+
+Answer these:
+
+### 1. What is adjacency list in your own words?
+
+### 2. Why do we need neighbors in a graph?
+
+### 3. What happens if you don’t implement adjacency before pathfinding?
+
+---
+
+When you answer, I’ll take you to:
+
+# 🚀 PHASE 3 — PATHFINDING DESIGN (BFS / Dijkstra strategy planning)
+
+This is where your drones will actually start “thinking” like AI 🧠🚁
