@@ -43,5 +43,5 @@ class ColorZone(Enum):
 
 
 class MapsTool(Enum):
-    """Used for diffrent enums in maps that dsent has groped enum"""
+    """Used for diffrent enums in maps that dosent has groped enum"""
     CONNECTION = 'connection'
