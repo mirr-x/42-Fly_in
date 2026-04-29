@@ -2,6 +2,7 @@
 
 from flyin._types import TypeZone, ColorZone, RoleZone, Cord, MetaData
 from flyin.parser import _errors
+from flyin.models.zone import Zone
 
 
 def _validate_drones(val: str, line_n: int) -> int:
@@ -90,19 +91,29 @@ def _validate_meta_data(val: str, line_n: int) -> MetaData:
     return meta_data
 
 
+def _name_is_duplucate(name: str, zones: list[Zone]) -> bool:
+    zone_list_names = list(map(lambda r: r.name, zones))
+    return name in zone_list_names
+
+
 def _validate_hup_values(
                         val: str,
+                        zones_names: list[Zone],
                         line_n: int
                     ) -> tuple[str, Cord, MetaData | None]:
-    parts = val.split(' ', 3)  # <name> <x> <y> [metadata]
+    parts = val.split(' ', maxsplit=3)  # <name> <x> <y> [metadata]
     l_parts = len(parts)
-    if not 3 <= l_parts:
+    if l_parts not in (3, 4):
         raise _errors.InvalidFormatError(
             'hub invalid formal <name> <x> <y> '
             f'optional[metadata] At line {line_n}')
     name = parts[0].strip()
     if '-' in name:
         raise _errors.InvalidValueError('dashes forbiden in <name>')
+    if _name_is_duplucate(name, zones_names):
+        raise _errors.DuplacateZoneError(
+                f'duplucate {name} At line {line_n}'
+            )
     cord = _validate_cords(
                             parts[1].strip(),
                             parts[2].strip(),
@@ -110,13 +121,29 @@ def _validate_hup_values(
                         )
     meta_data = None
     if l_parts == 4:
-        meta_data = _validate_meta_data(parts[3], line_n)
+        meta_data = _validate_meta_data(parts[3].strip(), line_n)
     return (name, cord, meta_data)
 
 
-def _get_corect_role(role: str, line_n: int) -> RoleZone:
+def _start_or_end_is_duplucate(zone: RoleZone, zones: list[Zone]) -> bool:
+    zone_list = list(map(lambda r: r.role, zones))
+    star_or_end = (zone == RoleZone.STARTING or zone == RoleZone.ENDING)
+    return star_or_end and zone in zone_list
+
+
+def _get_role_and_validate_it(
+        role: str,
+        zones: list[Zone],
+        line_n: int
+) -> RoleZone:
     try:
-        return RoleZone(role)
+        zone = RoleZone(role)
+        if _start_or_end_is_duplucate(zone, zones):
+            raise _errors.DuplacateZoneError(
+                f'duplucate {zone.value} At line {line_n}'
+            )
+
+        return zone
     except ValueError as exc:
         raise _errors.InvalidValueError(
             f'Unknowun role type At line {line_n}') from exc
