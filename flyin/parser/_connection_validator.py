@@ -4,6 +4,7 @@ from flyin.parser import _errors
 from flyin._types import MetaData
 from flyin.parser._zone_validators import _validate_missing_key_val
 from flyin.models.zone import Zone
+from flyin.models.connection import Connection
 
 
 def _get_max_link_capacity(val: str, line_n: int) -> int:
@@ -63,9 +64,19 @@ def _is_zone_a_b_exist(zone_a: str, zone_b: str, zones: list[Zone]) -> bool:
     return zone_a in zones_names and zone_b in zones_names
 
 
-def _validate_conc_vals(
+def _is_connections_duplucate(
+                                zone_a: str,
+                                zone_b: str,
+                                conn: list[Connection]
+                            ) -> bool:
+    connctions = {frozenset([i.zone_a, i.zone_b]) for i in conn}
+    return frozenset([zone_a, zone_b]) in connctions
+
+
+def _parse_connec_vals(
                         val: str,
                         zones: list[Zone],
+                        connections: list[Connection],
                         line_n: int
                     ) -> tuple[str, str, MetaData | None]:
     parts = val.split(' ', maxsplit=1)  # <zone_A>-<zone_B> [metadata]
@@ -75,9 +86,17 @@ def _validate_conc_vals(
             'connction invalid formal zone_A>-<zone_B> '
             f'optional[metadata] At line {line_n}')
     zone_a, zone_b = _get_zone_a_and_b(parts[0].strip(), line_n)
+    if zone_a == zone_b:
+        raise _errors.DuplacateConnectionError(
+            f'zone cant link to it self {zone_a}-{zone_b} At line {line_n}'
+        )
     if not _is_zone_a_b_exist(zone_a, zone_b, zones):
         raise _errors.InvalidValueError(
             f'zones {zone_a}-{zone_b} dosent exist At line {line_n}!!'
+        )
+    if _is_connections_duplucate(zone_a, zone_b, connections):
+        raise _errors.DuplacateConnectionError(
+            f'duplucate connection detected {zone_a}-{zone_b} At line {line_n}'
         )
     meta_data = None
     if l_parts == 2:
