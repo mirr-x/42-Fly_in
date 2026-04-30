@@ -57,8 +57,6 @@ class Parser:
             max_capacity = data.get('max_link_capacity', 1)
         tmp_conction = Connection(zone_a, zone_b, max_capacity)
         self.graph.add_connection(tmp_conction)
-        # TODO: Connections must link only previously defined zones
-        # using connection: <zone1>-<zone2> [metadata]
 
     def parsing(self) -> None:
         """Parse the map file, validate entries, and extract map data.
