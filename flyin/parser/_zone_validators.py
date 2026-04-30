@@ -96,7 +96,7 @@ def _name_is_duplucate(name: str, zones: list[Zone]) -> bool:
     return name in zone_list_names
 
 
-def _validate_hup_values(
+def _parse_zone_values(
                         val: str,
                         zones_names: list[Zone],
                         line_n: int
