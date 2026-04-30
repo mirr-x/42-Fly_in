@@ -9,10 +9,10 @@ from flyin._types import TypeZone, RoleZone, MapsTool
 from flyin.parser import (
     _validate_missing_key_val,
     _get_role_and_validate_it,
-    _validate_hup_val,
+    _parse_zone_val,
     _get_max_drones,
     _validate_drones,
-    _validate_conc_vals
+    _parse_connec_vals
 )
 
 
@@ -32,7 +32,7 @@ class Parser:
     def _handle_zones(self, key: str, val: str, line_n) -> None:
         list_zones = list(self.graph.zones.values())
         role = _get_role_and_validate_it(key, list_zones, line_n)
-        name, cord, meta_data = _validate_hup_val(val, list_zones, line_n)
+        name, cord, meta_data = _parse_zone_val(val, list_zones, line_n)
         max_drones, color, _type = 1, None, TypeZone.NORMAL
         if meta_data:
             max_drones = _get_max_drones(meta_data, line_n)
@@ -50,14 +50,15 @@ class Parser:
 
     def _handle_connctions(self, val: str, line_n) -> None:
         zones = list(self.graph.zones.values())
-        zone_a, zone_b, data = _validate_conc_vals(val, zones, line_n)
+        connec = self.graph.connection
+        zone_a, zone_b, data = _parse_connec_vals(val, zones, connec, line_n)
         max_capacity = 1
         if data:
             max_capacity = data.get('max_link_capacity', 1)
         tmp_conction = Connection(zone_a, zone_b, max_capacity)
         self.graph.add_connection(tmp_conction)
-        # TODO: Connections must link only previously defined zones using connection: <zone1>-<zone2> [metadata]
-
+        # TODO: Connections must link only previously defined zones
+        # using connection: <zone1>-<zone2> [metadata]
 
     def parsing(self) -> None:
         """Parse the map file, validate entries, and extract map data.
