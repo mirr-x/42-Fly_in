@@ -31,3 +31,9 @@ class DuplacateZoneError(ParserError):
     """DuplacateZoneError inherit from ParserError: get triggerd when passing
         duplucate start or end
     """
+
+
+class DuplacateConnectionError(ParserError):
+    """DuplacateConnectionError inherit from ParserError: get triggerd when
+        passing duplucate connections
+    """
