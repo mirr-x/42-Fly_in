@@ -35,7 +35,7 @@ def print_zones_and_connections(
     if connections:
         print('\nConnections:')
         for conn in connections:
-            print(f'    - {conn.zone_a} ↔ {conn.zone_b}')
+            print(f'    - {conn.zone_a.name} ↔ {conn.zone_b.name}')
     print()
 
 
@@ -48,14 +48,15 @@ def main() -> None:
         sys.exit(1)
 
     try:
-        pars = Parser(sys.argv[1], map_graph=Graph())
-        pars.parsing()
-        print_zones_and_connections(pars.graph.zones, pars.graph.connection)
+        parsed = Parser(sys.argv[1], map_graph=Graph())
+        parsed.parsing()
+        parsed.graph._build_adjacency()
+        print_zones_and_connections(parsed.graph.zones, parsed.graph.connection)
         # import json  ##* delet us
         # with open('mp.json', 'w', encoding='utf-8') as f:   ##*
-        #     a = {k: v.__repr__() for k, v in pars.graph.zones.items()}
+        #     a = {k: v.__repr__() for k, v in parsed.graph.zones.items()}
             
-        #     b = {f'{i.zone_a}-{i.zone_b}': i.__repr__() for i in pars.graph.connection}
+        #     b = {f'{i.zone_a}-{i.zone_b}': i.__repr__() for i in parsed.graph.connection}
         #     a.update(b)
         #     json.dump(a, f, indent=4)  ##*
     except _errors.InsaneError as exc:
