@@ -10,6 +10,7 @@ class Graph:
     def __init__(self) -> None:
         self.zones: dict[str, Zone] = {}
         self.connection: list[Connection] = []
+        self.adjacency_map: dict[Zone, list[Zone]] = {}
 
     def add_zone(self, zone: Zone) -> None:
         """Add zone to the zones dict <ZoneRole>: Zone
@@ -38,3 +39,14 @@ class Graph:
         if not isinstance(connection, Connection):
             raise _errors.InsaneError('should append zones only!!!')
         self.connection.append(connection)
+
+    def _build_adjacency(self) -> None:
+        for zone in self.zones.values():
+            self.adjacency_map[zone] = []
+        # 2 TODO: Then loop thou connections then linking start : needs Fixing totaly wrong
+        for conn in self.connection:
+            if conn.zone_b not in self.adjacency_map[conn.zone_a]:
+                self.adjacency_map[conn.zone_a].append(conn.zone_b)
+            if conn.zone_a not in self.adjacency_map[conn.zone_b]:
+                self.adjacency_map[conn.zone_b].append(conn.zone_a)
+        print(self.adjacency_map)
