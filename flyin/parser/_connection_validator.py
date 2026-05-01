@@ -78,7 +78,7 @@ def _parse_connec_vals(
                         zones: list[Zone],
                         connections: list[Connection],
                         line_n: int
-                    ) -> tuple[str, str, MetaData | None]:
+                    ) -> tuple[Zone, Zone, MetaData | None]:
     parts = val.split(' ', maxsplit=1)  # <zone_A>-<zone_B> [metadata]
     l_parts = len(parts)
     if l_parts not in (1, 2):
@@ -101,4 +101,6 @@ def _parse_connec_vals(
     meta_data = None
     if l_parts == 2:
         meta_data = _validate_meta_data_con(parts[1].strip(), line_n)
-    return (zone_a, zone_b, meta_data)
+    zone_obj_a = next(filter(lambda a: a if a.name == zone_a else None, zones))
+    zone_obj_b = next(filter(lambda a: a if a.name == zone_b else None, zones))
+    return (zone_obj_a, zone_obj_b, meta_data)
