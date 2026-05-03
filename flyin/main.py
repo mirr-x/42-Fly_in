@@ -50,7 +50,6 @@ def main() -> None:
     try:
         parsed = Parser(sys.argv[1], map_graph=Graph())
         parsed.parsing()
-        parsed.graph._build_adjacency()
         print_zones_and_connections(parsed.graph.zones, parsed.graph.connection)
         # import json  ##* delet us
         # with open('mp.json', 'w', encoding='utf-8') as f:   ##*
