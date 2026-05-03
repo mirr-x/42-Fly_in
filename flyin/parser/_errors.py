@@ -37,3 +37,9 @@ class DuplacateConnectionError(ParserError):
     """DuplacateConnectionError inherit from ParserError: get triggerd when
         passing duplucate connections
     """
+
+
+class ElementNotFoundError(ParserError):
+    """DuplacateConnectionError inherit from ParserError: get triggerd when
+        passing duplucate connections
+    """
