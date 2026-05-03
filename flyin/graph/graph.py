@@ -9,7 +9,7 @@ class Graph:
 
     def __init__(self) -> None:
         self.zones: dict[str, Zone] = {}
-        self.connection: list[Connection] = []
+        self.connections: list[Connection] = []
         self.adjacency_map: dict[Zone, list[Zone]] = {}
 
     def add_zone(self, zone: Zone) -> None:
@@ -38,15 +38,32 @@ class Graph:
 
         if not isinstance(connection, Connection):
             raise _errors.InsaneError('should append zones only!!!')
-        self.connection.append(connection)
+        self.connections.append(connection)
 
-    def _build_adjacency(self) -> None:
+    def build_adjacency(self) -> None:
+        """Build the adjacency map by assigning neighbors to each zone."""
+
         for zone in self.zones.values():
             self.adjacency_map[zone] = []
-        # 2 TODO: Then loop thou connections then linking start : needs Fixing totaly wrong
-        for conn in self.connection:
+        for conn in self.connections:
             if conn.zone_b not in self.adjacency_map[conn.zone_a]:
                 self.adjacency_map[conn.zone_a].append(conn.zone_b)
             if conn.zone_a not in self.adjacency_map[conn.zone_b]:
                 self.adjacency_map[conn.zone_b].append(conn.zone_a)
-        print(self.adjacency_map)
+
+    def get_neighbors(self, zone: Zone) -> list[Zone]:
+        """return zones that you can accses from given zone
+
+        Args:
+            zone (Zone): Zone object
+
+        Returns:
+            list[Zone]: zones objects you can accses
+        """
+
+        try:
+            return self.adjacency_map[zone]
+        except KeyError as ecx:
+            raise _errors.ElementNotFoundError(
+                f'zone {zone.name} not found from get_neighbors()'
+            ) from ecx
