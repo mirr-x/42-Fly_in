@@ -50,7 +50,7 @@ class Parser:
 
     def _handle_connctions(self, val: str, line_n) -> None:
         zones = list(self.graph.zones.values())
-        connec = self.graph.connection
+        connec = self.graph.connections
         zone_a, zone_b, data = _parse_connec_vals(val, zones, connec, line_n)
         max_capacity = 1
         if data:
@@ -85,3 +85,6 @@ class Parser:
             raise _errors.ParserFileNotFoundError(
                 f'cannot open file {self.file_path}'
             ) from exc
+        else:
+            self.graph.build_adjacency()
+
