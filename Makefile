@@ -1,3 +1,3 @@
 
 run:
-	python -m fly-in.main maps
+	python -m flyin.main maps/easy/01_linear_path.txt
