@@ -50,7 +50,7 @@ def main() -> None:
     try:
         parsed = Parser(sys.argv[1], map_graph=Graph())
         parsed.parsing()
-        print_zones_and_connections(parsed.graph.zones, parsed.graph.connection)
+        print_zones_and_connections(parsed.graph.zones, parsed.graph.connections)
         # import json  ##* delet us
         # with open('mp.json', 'w', encoding='utf-8') as f:   ##*
         #     a = {k: v.__repr__() for k, v in parsed.graph.zones.items()}
