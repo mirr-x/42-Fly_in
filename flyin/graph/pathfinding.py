@@ -26,10 +26,11 @@ class FindPath:
 
     # def _reconstruct_path(parent_map, start, goal) ->
 
-    def _bfs(self, start: Zone, end: Zone) -> None:  # -> list[Zone]
+    def _bfs(self, start: Zone, end: Zone) -> dict[Zone, list[Zone]] | None:
         queue = collections.deque()
         visited = set()
-        parent_map = {}
+        parent_map = collections.defaultdict(list)
+        path_found = False
 
         queue.append(start)
         visited.add(queue[0])
@@ -41,41 +42,12 @@ class FindPath:
                 if neighbor not in visited:
                     visited.add(neighbor)
                     queue.append(neighbor)
-                    parent_map[parent] = neighbor
+                    parent_map[parent].append(neighbor)
                     if neighbor == end:
-                        print("PATH FOUND!")
-                        print(parent_map)
-                        exit(1)
-    # TODO: Next you will dubug all this if all good an working on all maps and you will implemnt and skipp dead end and so an
-    # so we can finish phase 3
-
-
-# {
-#     start: [waypoint1],
-#     waypoint1: [start, waypoint2],
-#     waypoint2: [waypoint1, goal],
-#     goal: [waypoint2]
-# }
-#
-# queue = {start}
-# visited = {start}
-# map = {}
-#
-# loop 1:
-        # queue = {waypoint1}
-        # visited = {start}
-        # neighbors = [waypoint1]
-        # map = {start -> waypoint1}
-# loop 2:
-        # queue = {waypoint2}
-        # visited = {start, waypoint1}
-        # neighbors = [start, waypoint2]
-        # map = {start -> waypoint1,
-        #        waypoint1 -> waypoint2}
-# loop 3:
-        # queue = {goal}
-        # visited = {start, waypoint1, goal}
-        # neighbors = [waypoint1, goal]
-        # map = {start -> waypoint1,
-        #        waypoint1 -> waypoint2
-        #        waypoint2-> goal}
+                        path_found = True
+        if path_found:
+            print("PATH FOUND!")
+            print(dict(parent_map))
+        else:
+            print("PATH NOT VALID!!")
+        return dict(parent_map) if path_found else None
