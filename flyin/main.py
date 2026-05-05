@@ -51,6 +51,11 @@ def main() -> None:
         parsed = Parser(sys.argv[1], map_graph=Graph())
         parsed.parsing()
         print_zones_and_connections(parsed.graph.zones, parsed.graph.connections)
+        print()
+        # DELETE ALL DOWN
+        from flyin.graph.pathfinding import FindPath
+        path = FindPath(parsed.graph)
+        path._bfs(parsed.graph.zones['start'], parsed.graph.zones['goal'])
         # import json  ##* delet us
         # with open('mp.json', 'w', encoding='utf-8') as f:   ##*
         #     a = {k: v.__repr__() for k, v in parsed.graph.zones.items()}
