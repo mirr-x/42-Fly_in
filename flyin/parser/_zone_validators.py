@@ -41,10 +41,10 @@ def _validate_cords(x: str, y: str, line_n: int) -> Cord:
         raise _errors.InvalidCordsError(
             f'Cords should be included At line {line_n}'
         ) from exc
-    if v1 < 0 or v2 < 0:
-        raise _errors.InvalidCordsError(
-            f'Cords cannot be >= 0 At line {line_n}'
-        )
+    # if v1 < 0 or v2 < 0:
+    #     raise _errors.InvalidCordsError(
+    #         f'Cords cannot be >= 0 At line {line_n}'
+    #     )
     return (v1, v2)
 
 
