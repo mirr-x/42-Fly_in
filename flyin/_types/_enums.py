@@ -40,6 +40,12 @@ class ColorZone(Enum):
     NAVY = 'navy'
     TEAL = 'teal'
     OLIVE = 'olive'
+    GOLD = 'gold'
+    MAROON = 'maroon'
+    DARKRED = 'darkred'
+    VIOLET = 'violet'
+    CRIMSON = 'crimson'
+    RAINBOW = 'rainbow'
 
 
 class MapsTool(Enum):
