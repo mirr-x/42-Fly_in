@@ -43,3 +43,9 @@ class ElementNotFoundError(ParserError):
     """DuplacateConnectionError inherit from ParserError: get triggerd when
         passing duplucate connections
     """
+
+
+class InvalidPathError(ParserError):
+    """InvalidPathError inherit from ParserError: get triggerd when
+        thier is an invalid path
+    """
