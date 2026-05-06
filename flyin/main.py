@@ -15,6 +15,7 @@ from flyin.parser.parser import Parser
 from flyin.graph.graph import Graph
 from flyin.models.zone import Zone
 from flyin.models.connection import Connection
+from flyin.graph.pathfinding import FindPath
 
 
 def print_zones_and_connections(
@@ -50,19 +51,19 @@ def main() -> None:
     try:
         parsed = Parser(sys.argv[1], map_graph=Graph())
         parsed.parsing()
-        print_zones_and_connections(parsed.graph.zones, parsed.graph.connections)
-        print()
-        # DELETE ALL DOWN
-        from flyin.graph.pathfinding import FindPath
-        path = FindPath(parsed.graph)
-        path._bfs(parsed.graph.zones['start'], parsed.graph.zones['goal'])
-        # import json  ##* delet us
-        # with open('mp.json', 'w', encoding='utf-8') as f:   ##*
-        #     a = {k: v.__repr__() for k, v in parsed.graph.zones.items()}
-            
-        #     b = {f'{i.zone_a}-{i.zone_b}': i.__repr__() for i in parsed.graph.connection}
-        #     a.update(b)
-        #     json.dump(a, f, indent=4)  ##*
+        print_zones_and_connections(
+            parsed.graph.zones,
+            parsed.graph.connections
+        )
+        # finding path phase
+        find_path = FindPath(parsed.graph)
+        shortest_path = find_path.find_shortest_path(
+            parsed.start_zone,
+            parsed.end_zone
+        )
+        print(shortest_path)
+    except _errors.InvalidPathError as exc:
+        logging.warning('Path Error: %s', exc)
     except _errors.InsaneError as exc:
         logging.critical('Graph Error: %s', exc)
     except _errors.ParserError as exc:
@@ -80,3 +81,5 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         logging.exception('Execution interrupted by user')
         sys.exit(130)
+    # except Exception as unexpected_error:  # [broad-exception-caught]
+    #     logging.exception('Unexpected error: %s', unexpected_error)
