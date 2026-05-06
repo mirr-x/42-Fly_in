@@ -28,6 +28,8 @@ class Parser:
         self.file_path = file_path
         self.graph = map_graph
         self.nb_drones = 0
+        self.start_zone: Zone
+        self.end_zone: Zone
 
     def _handle_zones(self, key: str, val: str, line_n) -> None:
         list_zones = list(self.graph.zones.values())
@@ -81,10 +83,15 @@ class Parser:
                     else:
                         raise _errors.InvalidFormatError(
                             f'Unknowun key At line {line_n}')
+                self.start_zone = self.graph.zones['start']
+                self.end_zone = self.graph.zones['goal']
         except OSError as exc:
             raise _errors.ParserFileNotFoundError(
                 f'cannot open file {self.file_path}'
             ) from exc
+        except KeyError as exc:
+            raise _errors.ElementNotFoundError(
+                'start_hub/end_hub not found'
+            ) from exc
         else:
             self.graph.build_adjacency()
-
