@@ -34,8 +34,3 @@ class Zone:
 
     def __repr__(self) -> str:
         return f'{self.name}'
-
-    # def __repr__(self) -> str:
-    #     return (f'Zone(name={self.name}, cord={self.cord}, role={self.role}, '
-    #             f'max_drones={self.max_drones}, color={self.color}, '
-    #             f'type={self._type})')
