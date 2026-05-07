@@ -15,7 +15,7 @@ from flyin.parser.parser import Parser
 from flyin.graph.graph import Graph
 from flyin.models.zone import Zone
 from flyin.models.connection import Connection
-from flyin.graph.pathfinding import FindPath
+from flyin.pathfinding.dfs import FindPath
 
 
 def print_zones_and_connections(
