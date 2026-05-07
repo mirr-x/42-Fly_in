@@ -7,9 +7,9 @@ class TypeZone(Enum):
     """This andicate the type of Zone"""
 
     BLOCKED = 0
+    PRIORITY = 0.9
     NORMAL = 1
     RESTRICTED = 2
-    PRIORITY = 'priority'
 
 
 class RoleZone(Enum):
