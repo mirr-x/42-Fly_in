@@ -24,6 +24,8 @@ class FindPath:
         Returns:
             A list of zones representing the shortest path.
         """
+        if start == end:
+            return [start]
         parent_map = self._bfs(start, end)
         if parent_map is None:
             raise _errors.InvalidPathError('Path couldnt be find !!!')
@@ -36,14 +38,11 @@ class FindPath:
         goal: Zone,
     ) -> list[Zone]:
         path = []
-        parent_map_reversed = dict(reversed(parent_map.items()))
         cur = goal
-        for child, parent in parent_map_reversed.items():
-            if child == cur:
-                path.append(cur)
-                cur = parent
-        if cur == start:
+        while cur != start:
             path.append(cur)
+            cur = parent_map[cur]
+        path.append(start)
         path.reverse()
         return path
 
@@ -54,21 +53,21 @@ class FindPath:
         path_found = False
 
         queue.append(start)
-        visited.add(queue[0])
+        visited.add(start)
         while queue:
-            parent = queue[0]
-            queue.popleft()
-            neighbors = self.graph.get_neighbors(parent)
+            current = queue.popleft()
+            neighbors = self.graph.get_neighbors(current)
             for neighbor in neighbors:
                 if neighbor not in visited:
                     visited.add(neighbor)
                     queue.append(neighbor)
-                    parent_map[neighbor] = parent
+                    parent_map[neighbor] = current
                     if neighbor == end:
                         path_found = True
+                        break
+            if path_found:
+                break
         if path_found:
             print("PATH FOUND!")
             print(parent_map)
         return parent_map if path_found else None
-
-# TODO: check witch GPT if this code is valid and all is good and its good with changes happend in subject ?? to move to phase 3
