@@ -6,9 +6,9 @@ from enum import Enum
 class TypeZone(Enum):
     """This andicate the type of Zone"""
 
-    NORMAL = 'normal'
-    BLOCKED = 'blocked'
-    RESTRICTED = 'restricted'
+    BLOCKED = 0
+    NORMAL = 1
+    RESTRICTED = 2
     PRIORITY = 'priority'
 
 
