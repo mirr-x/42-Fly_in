@@ -3,7 +3,7 @@
 from enum import Enum
 
 
-class TypeZone(Enum):
+class CostZone(Enum):
     """This andicate the type of Zone"""
 
     BLOCKED = None
