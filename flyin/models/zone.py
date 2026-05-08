@@ -1,7 +1,7 @@
 """This module defines a Zone that represents a location on the map."""
 
 from flyin._types import Optional
-from flyin._types import RoleZone, TypeZone, Cord
+from flyin._types import RoleZone, CostZone, Cord
 
 
 class Zone:
@@ -13,7 +13,7 @@ class Zone:
         role: The zone s role (e.g., STARTING, REGULAR, or ENDING).
         max_drones: Optional[Maximum number of drones allowed in this zone]
         color: Optional color code (e.g., '#FF0000') for map rendering.
-        zone_type: Optional[type of zone NORMAL, BLOCKED, RESTRICTED, PRIORITY]
+        zone_cost: Optional[type of zone NORMAL, BLOCKED, RESTRICTED, PRIORITY]
     """
 
     def __init__(
@@ -23,14 +23,14 @@ class Zone:
                 role: RoleZone,
                 max_drones: Optional[int] = 1,
                 color: Optional[str] = None,
-                _type: TypeZone = TypeZone.NORMAL
+                cost: CostZone = CostZone.NORMAL
                 ) -> None:
         self.name = name
         self.cord = cord
         self.role = role
         self.max_drones = max_drones
         self.color = color
-        self._type = _type
+        self.cost = cost
 
     def __repr__(self) -> str:
         return f'{self.name}'
