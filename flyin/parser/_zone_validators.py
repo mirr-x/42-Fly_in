@@ -1,6 +1,6 @@
 """This file containe internal helper functions for validation Parsing"""
 
-from flyin._types import TypeZone, ColorZone, RoleZone, Cord, MetaData
+from flyin._types import CostZone, ColorZone, RoleZone, Cord, MetaData
 from flyin.parser import _errors
 from flyin.models.zone import Zone
 
@@ -48,12 +48,12 @@ def _validate_cords(x: str, y: str, line_n: int) -> Cord:
     return (v1, v2)
 
 
-def _get_corect_zone(_type: str, line_n: int) -> TypeZone:
+def _get_corect_cost(cost: str, line_n: int) -> CostZone:
     try:
-        return TypeZone(_type)
+        return CostZone(cost)
     except ValueError as exc:
         raise _errors.InvalidValueError(
-            f'Unknowun zone type At line {line_n}'
+            f'Unknowun zone cost At line {line_n}'
         ) from exc
 
 
@@ -79,7 +79,7 @@ def _validate_meta_data(val: str, line_n: int) -> MetaData:
     for i in parts:
         key, _val = _validate_missing_key_val(i, '=', line_n)
         if key == 'zone':
-            meta_data['zone'] = _get_corect_zone(_val, line_n)
+            meta_data['cost'] = _get_corect_cost(_val, line_n)
         elif key == 'color':
             meta_data['color'] = _get_corect_color(_val, line_n)
         elif key == 'max_drones':
