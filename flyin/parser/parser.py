@@ -5,7 +5,7 @@ from flyin.models.zone import Zone
 from flyin.models.connection import Connection
 from flyin.graph.graph import Graph
 from flyin.parser import _errors
-from flyin._types import CostZone, RoleZone, MapsTool
+from flyin._types import ZoneCategory, RoleZone, MapsTool
 from flyin.parser import (
     _validate_missing_key_val,
     _get_role_and_validate_it,
@@ -35,18 +35,18 @@ class Parser:
         list_zones = list(self.graph.zones.values())
         role = _get_role_and_validate_it(key, list_zones, line_n)
         name, cord, meta_data = _parse_zone_val(val, list_zones, line_n)
-        max_drones, color, cost = 1, None, CostZone.NORMAL
+        max_drones, color, category = 1, None, ZoneCategory.NORMAL
         if meta_data:
             max_drones = _get_max_drones(meta_data, line_n)
             color = meta_data.get('color', None)
-            cost = meta_data.get('cost', CostZone.NORMAL)
+            category = meta_data.get('category', ZoneCategory.NORMAL)
         temp_zone = Zone(
             name=name,
             cord=cord,
             role=role,
             max_drones=max_drones,
             color=color,
-            cost=cost
+            category=category
         )
         self.graph.add_zone(temp_zone)
 
@@ -84,7 +84,9 @@ class Parser:
                         raise _errors.InvalidFormatError(
                             f'Unknowun key At line {line_n}')
                 self.start_zone = self.graph.zones['start']
-                self.end_zone = self.graph.zones['goal']
+                self.end_zone = self.graph.zones.get('goal')  # type: ignore
+                if self.end_zone is None:
+                    self.end_zone = self.graph.zones['impossible_goal']
         except OSError as exc:
             raise _errors.ParserFileNotFoundError(
                 f'cannot open file {self.file_path}'
