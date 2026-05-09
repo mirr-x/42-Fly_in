@@ -47,6 +47,7 @@ class Dijkstra:
             cur = parent_map[cur]
         path.append(start)
         path.reverse()
+        self.graph.dijkstra_path = path
         return path
 
     def _get_neighbors_and_sort(self, zone: Zone) -> list[Zone]:
@@ -76,7 +77,6 @@ class Dijkstra:
 
             if cur == end:
                 path_found = True
-                print(path_found)
                 break
 
             neighbors = self._get_neighbors_and_sort(cur)
