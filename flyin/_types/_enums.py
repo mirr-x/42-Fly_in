@@ -3,13 +3,13 @@
 from enum import Enum
 
 
-class CostZone(Enum):
-    """This andicate the type of Zone"""
+class ZoneCategory(Enum):
+    """This andicate the category of Zone"""
 
-    BLOCKED = None
-    PRIORITY = 0.9
-    NORMAL = 1
-    RESTRICTED = 2
+    PRIORITY = 'priority'
+    NORMAL = 'normal'
+    RESTRICTED = 'restricted'
+    BLOCKED = 'blocked'
 
 
 class RoleZone(Enum):
