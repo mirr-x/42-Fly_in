@@ -1,6 +1,8 @@
 """Graph Module is the Module gonna store all data of the map and map itself"""
 
-from flyin.models import Zone, Connection
+from flyin.models.zone import Zone
+from flyin.models.connection import Connection
+from flyin.models.drone import Drone
 from flyin.parser import _errors
 
 
@@ -8,9 +10,11 @@ class Graph:
     """Graph class store all info of the map"""
 
     def __init__(self) -> None:
+        self.drones: list[Drone]
         self.zones: dict[str, Zone] = {}
         self.connections: list[Connection] = []
         self.adjacency_map: dict[Zone, list[Zone]] = {}
+        self.dijkstra_path: list[Zone] | None = None
 
     def add_zone(self, zone: Zone) -> None:
         """Add zone to the zones dict <ZoneRole>: Zone
