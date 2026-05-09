@@ -1,7 +1,8 @@
 """This module defines a Zone that represents a location on the map."""
 
 from flyin._types import Optional
-from flyin._types import RoleZone, CostZone, Cord
+from flyin._types import RoleZone, ZoneCategory, Cord
+from flyin.parser import _errors
 
 
 class Zone:
@@ -23,14 +24,32 @@ class Zone:
                 role: RoleZone,
                 max_drones: Optional[int] = 1,
                 color: Optional[str] = None,
-                cost: CostZone = CostZone.NORMAL
+                category: ZoneCategory = ZoneCategory.NORMAL
                 ) -> None:
         self.name = name
         self.cord = cord
         self.role = role
         self.max_drones = max_drones
         self.color = color
-        self.cost = cost
+        self.category = category
+
+    def get_movement_cost(self) -> float:
+        """Return the movement category associated with this zone."""
+        if self.role is RoleZone.STARTING:
+            return 0
+        if self.category is ZoneCategory.PRIORITY:
+            return 1
+        if self.category is ZoneCategory.NORMAL:
+            return 1
+        if self.category is ZoneCategory.RESTRICTED:
+            return 2
+        raise _errors.InvalidValueError(
+            f"Unknown zone category for '{self.name}'"
+        )
+
+    def is_blocked(self) -> bool:
+        """Return True if this zone is blocked."""
+        return self.category is ZoneCategory.BLOCKED
 
     def __repr__(self) -> str:
         return f'{self.name}'
