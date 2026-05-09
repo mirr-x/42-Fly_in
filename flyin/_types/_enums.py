@@ -51,3 +51,10 @@ class ColorZone(Enum):
 class MapsTool(Enum):
     """Used for diffrent enums in maps that dosent has groped enum"""
     CONNECTION = 'connection'
+
+
+class DroneState(Enum):
+    """Possible states for a drone."""
+    MOVING = 'moving'
+    WAITING = 'waiting'
+    DELIVERED = 'delivered'
