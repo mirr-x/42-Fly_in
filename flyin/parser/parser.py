@@ -4,6 +4,7 @@
 from flyin.models.zone import Zone
 from flyin.models.connection import Connection
 from flyin.graph.graph import Graph
+from flyin.models.drone import Drone
 from flyin.parser import _errors
 from flyin._types import ZoneCategory, RoleZone, MapsTool
 from flyin.parser import (
@@ -30,6 +31,19 @@ class Parser:
         self.nb_drones = 0
         self.start_zone: Zone
         self.end_zone: Zone
+
+    def creat_drones(self) -> None:
+        """Create drones for the graph based on the number specified."""
+        self.graph.drones = list(
+            map(
+                lambda i: Drone(
+                    _id=i + 1,
+                    current_zone=self.start_zone,
+                    path=self.graph.dijkstra_path
+                ),
+                range(self.nb_drones)
+            )
+        )
 
     def _handle_zones(self, key: str, val: str, line_n) -> None:
         list_zones = list(self.graph.zones.values())
