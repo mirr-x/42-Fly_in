@@ -16,6 +16,7 @@ from flyin.graph.graph import Graph
 from flyin.models.zone import Zone
 from flyin.models.connection import Connection
 from flyin.pathfinding.dijkstra import Dijkstra
+from flyin.simulation.simulator import Simulator
 
 
 def print_zones_and_connections(
@@ -62,6 +63,13 @@ def main() -> None:
             parsed.end_zone
         )
         print(shortest_path)
+        # drone simulations phase
+        print()
+        parsed.creat_drones()
+        print(parsed.graph.drones)
+        print()
+        simulation_engein = Simulator(parsed.graph.drones, parsed.graph)
+        simulation_engein.run()
     except _errors.InvalidPathError as exc:
         logging.warning('Path Error: %s', exc)
     except _errors.InsaneError as exc:
