@@ -15,7 +15,7 @@ from flyin.parser.parser import Parser
 from flyin.graph.graph import Graph
 from flyin.models.zone import Zone
 from flyin.models.connection import Connection
-from flyin.pathfinding.dfs import FindPath
+from flyin.pathfinding.dijkstra import Dijkstra
 
 
 def print_zones_and_connections(
@@ -56,7 +56,7 @@ def main() -> None:
             parsed.graph.connections
         )
         # finding path phase
-        find_path = FindPath(parsed.graph)
+        find_path = Dijkstra(parsed.graph)
         shortest_path = find_path.find_shortest_path(
             parsed.start_zone,
             parsed.end_zone
