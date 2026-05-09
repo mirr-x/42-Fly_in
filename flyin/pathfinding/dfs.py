@@ -67,7 +67,4 @@ class FindPath:
                         break
             if path_found:
                 break
-        if path_found:
-            print("PATH FOUND!")
-            print(parent_map)
         return parent_map if path_found else None
