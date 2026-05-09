@@ -10,7 +10,7 @@
             "type": "debugpy",
             "request": "launch",
             "module": "flyin.main",
-            "args": ["maps/medium/03_priority_puzzle.txt"]
+            "args": ["maps/easy/01_linear_path.txt"]
         }
     ]
 }
