@@ -4,11 +4,11 @@
 
 from typing import Optional, TypeAlias
 
-from flyin._types._enums import CostZone, RoleZone, ColorZone, MapsTool
+from flyin._types._enums import ZoneCategory, RoleZone, ColorZone, MapsTool
 from flyin._types._types import Cord, MetaData
 
 __all__ = [
-    'CostZone',
+    'ZoneCategory',
     'RoleZone',
     'ColorZone',
     'Cord',
