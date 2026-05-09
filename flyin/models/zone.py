@@ -3,6 +3,7 @@
 from flyin._types import Optional
 from flyin._types import RoleZone, ZoneCategory, Cord
 from flyin.parser import _errors
+from flyin.models.drone import Drone
 
 
 class Zone:
@@ -32,6 +33,7 @@ class Zone:
         self.max_drones = max_drones
         self.color = color
         self.category = category
+        self.drones: list[Drone] = []
 
     def get_movement_cost(self) -> float:
         """Return the movement category associated with this zone."""
