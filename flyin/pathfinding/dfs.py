@@ -8,13 +8,13 @@ from flyin.parser import _errors
 import collections
 
 
-class FindPath:
+class BFS:
     """Find the the shortest path using BFS algo"""
 
     def __init__(self, graph: Graph) -> None:
         self.graph = graph
 
-    def find_shortest_path(self, start: Zone, end: Zone) -> list[Zone]:
+    def run(self, start: Zone, end: Zone) -> list[Zone]:
         """Return the shortest path from start to end.
 
         Args:
