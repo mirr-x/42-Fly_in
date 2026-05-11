@@ -17,7 +17,7 @@ class Dijkstra:
     def __init__(self, graph: Graph) -> None:
         self.graph = graph
 
-    def find_shortest_path(self, start: Zone, end: Zone) -> list[Zone]:
+    def run(self, start: Zone, end: Zone) -> list[Zone]:
         """Return the shortest costing path from start to end.
 
         Args:
