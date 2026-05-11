@@ -1,7 +1,10 @@
 """This module contains the Drone class which represents a drone entity."""
 
-from flyin.models.zone import Zone
+from typing import TYPE_CHECKING
 from flyin._types._enums import DroneState
+
+if TYPE_CHECKING:
+    from flyin.models.zone import Zone
 
 
 class Drone:
@@ -18,8 +21,8 @@ class Drone:
     def __init__(
             self,
             _id: int,
-            current_zone: Zone,
-            path: list[Zone] | None,
+            current_zone: 'Zone',
+            path: list['Zone'] | None,
             state: DroneState = DroneState.WAITING
     ) -> None:
         self.id = f'D{_id}'
@@ -28,7 +31,7 @@ class Drone:
         self.path_index = 0
         self.state = state
 
-    def next_zone(self) -> Zone | None:
+    def next_zone(self) -> 'Zone | None':
         """Return the next zone in the planned path, if available."""
         if self.path is None or self.path_index + 1 >= len(self.path):
             return None
