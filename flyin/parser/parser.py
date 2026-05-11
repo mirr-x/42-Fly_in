@@ -7,14 +7,14 @@ from flyin.graph.graph import Graph
 from flyin.models.drone import Drone
 from flyin.parser import _errors
 from flyin._types import ZoneCategory, RoleZone, MapsTool
-from flyin.parser import (
+from flyin.parser._zone_validators import (
     _validate_missing_key_val,
     _get_role_and_validate_it,
-    _parse_zone_val,
+    _parse_zone_values,
     _get_max_drones,
-    _validate_drones,
-    _parse_connec_vals
+    _validate_drones
 )
+from flyin.parser._connection_validator import _parse_connec_vals
 
 
 class Parser:
@@ -48,7 +48,7 @@ class Parser:
     def _handle_zones(self, key: str, val: str, line_n) -> None:
         list_zones = list(self.graph.zones.values())
         role = _get_role_and_validate_it(key, list_zones, line_n)
-        name, cord, meta_data = _parse_zone_val(val, list_zones, line_n)
+        name, cord, meta_data = _parse_zone_values(val, list_zones, line_n)
         max_drones, color, category = 1, None, ZoneCategory.NORMAL
         if meta_data:
             max_drones = _get_max_drones(meta_data, line_n)
