@@ -58,7 +58,7 @@ def main() -> None:
         )
         # finding path phase
         find_path = Dijkstra(parsed.graph)
-        shortest_path = find_path.find_shortest_path(
+        shortest_path = find_path.run(
             parsed.start_zone,
             parsed.end_zone
         )
