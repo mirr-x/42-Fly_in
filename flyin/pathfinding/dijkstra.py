@@ -27,28 +27,31 @@ class Dijkstra:
         Returns:
             A list of zones representing the shortest path.
         """
+
         if start == end:
             return [start]
-        parent_map = self.dijkstra(start, end)
-        if parent_map is None:
+        _map = self.dijkstra(start, end)
+        if _map is None:
             raise _errors.InvalidPathError('Path couldnt be find !!!')
-        return self._reconstruct_path(parent_map, start, end)
+        self.graph.dijkstra_path = _map
+        return _map
+        # return self._reconstruct_path(parent_map, start, end)
 
-    def _reconstruct_path(
-        self,
-        parent_map: dict[Zone, Zone],
-        start: Zone,
-        goal: Zone,
-    ) -> list[Zone]:
-        path = []
-        cur = goal
-        while cur != start:
-            path.append(cur)
-            cur = parent_map[cur]
-        path.append(start)
-        path.reverse()
-        self.graph.dijkstra_path = path
-        return path
+    # def _reconstruct_path(
+    #     self,
+    #     parent_map: dict[Zone, Zone],
+    #     start: Zone,
+    #     goal: Zone,
+    # ) -> list[Zone]:
+    #     path = []
+    #     cur = goal
+    #     while cur != start:
+    #         path.append(cur)
+    #         cur = parent_map[cur]
+    #     path.append(start)
+    #     path.reverse()
+    #     self.graph.dijkstra_path = path
+    #     return path
 
     def _get_neighbors_and_sort(self, zone: Zone) -> list[Zone]:
         zones = self.graph.get_neighbors(zone)
@@ -59,36 +62,39 @@ class Dijkstra:
             )
         )
 
-    def dijkstra(self, start: Zone, end: Zone) -> dict[Zone, Zone] | None:
+    # TODO: rewrite djikstra algo to get all posible paths
+    def dijkstra(self, start: Zone, end: Zone) -> list[Zone] | None:
         """Compute shortest path distances using Dijkstra's algorithm."""
 
         counter = itertools.count()
-        pqueue = [(start.get_movement_cost(), next(counter), start)]
+        paths_ruselts: list[tuple[int, list[Zone]]] = []
+        pqueue: list[tuple[int, int, list[Zone]]] = [
+            (0, next(counter), [start])
+        ]
         distances = {zone: float('inf') for zone in self.graph.zones.values()}
-        parent_map = {}
         path_found = False
 
         distances[start] = 0
         while pqueue:
-            cur_cost, _, cur = heapq.heappop(pqueue)
+            cur_cost, _, cur_path = heapq.heappop(pqueue)
 
-            if cur_cost > distances[cur]:
+            if cur_cost > distances[cur_path[-1]]:
                 continue
 
-            if cur == end:
+            if cur_path[-1] == end:  # cur_path[-1]
                 path_found = True
+                paths_ruselts.append((cur_cost, cur_path))
                 break
 
-            neighbors = self._get_neighbors_and_sort(cur)
+            neighbors = self._get_neighbors_and_sort(cur_path[-1])
             for neighbor in neighbors:
                 if neighbor.is_blocked():
                     continue
-                new_cost = cur_cost + neighbor.get_movement_cost()
-                if new_cost < distances[neighbor]:
+                if neighbor not in cur_path:
+                    new_cost = cur_cost + neighbor.get_movement_cost()
                     distances[neighbor] = new_cost
-                    parent_map[neighbor] = cur
                     heapq.heappush(
                         pqueue,
-                        (distances[neighbor], next(counter), neighbor)
+                        (new_cost, next(counter), cur_path + [neighbor])
                     )
-        return parent_map if path_found else None
+        return paths_ruselts[0][1] if path_found else None
