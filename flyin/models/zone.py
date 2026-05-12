@@ -1,12 +1,8 @@
 """This module defines a Zone that represents a location on the map."""
 
-from typing import TYPE_CHECKING
 from flyin._types import Optional
 from flyin._types import RoleZone, ZoneCategory, Cord
 from flyin.parser import _errors
-
-if TYPE_CHECKING:
-    from flyin.models.drone import Drone
 
 
 class Zone:
@@ -36,10 +32,10 @@ class Zone:
         self.max_drones = max_drones
         self.color = color
         self.category = category
-        self.drones: list['Drone'] = []
 
     def get_movement_cost(self) -> float:
         """Return the movement category associated with this zone."""
+
         if self.role is RoleZone.STARTING:
             return 0
         if self.category is ZoneCategory.PRIORITY:
@@ -54,6 +50,7 @@ class Zone:
 
     def is_blocked(self) -> bool:
         """Return True if this zone is blocked."""
+
         return self.category is ZoneCategory.BLOCKED
 
     def __repr__(self) -> str:
