@@ -71,3 +71,29 @@ class Graph:
             raise _errors.ElementNotFoundError(
                 f'zone {zone.name} not found from get_neighbors()'
             ) from ecx
+
+    def get_connection(self, zone_a: Zone, zone_b: Zone) -> Connection | None:
+        """Get the connection between two zones.
+
+        Args:
+            zone_a (Zone): First zone
+            zone_b (Zone): Second zone
+
+        Returns:
+            Connection: Connection object between the two zones
+        """
+        conn = next(
+            (
+                conn
+                for conn in self.connections
+                if conn.zone_a == zone_a and conn.zone_b == zone_b
+            ), None)
+        return conn
+
+    def get_start_zone(self) -> Zone | None:
+        """Get the start zone from the zones dictionary.
+
+        Returns:
+            Zone | None: The start zone if it exists, None otherwise
+        """
+        return self.zones.get('start')
