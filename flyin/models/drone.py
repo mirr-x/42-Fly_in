@@ -1,10 +1,7 @@
 """This module contains the Drone class which represents a drone entity."""
 
-from typing import TYPE_CHECKING
 from flyin._types._enums import DroneState
-
-if TYPE_CHECKING:
-    from flyin.models.zone import Zone
+from flyin.models.zone import Zone
 
 
 class Drone:
@@ -37,19 +34,23 @@ class Drone:
             return None
         return self.path[self.path_index + 1]
 
-    def move_next(self) -> None:
+    def move_next(self, next_zone: Zone) -> None:
         "Move to next zone in the planned path"
-        next_zone = self.next_zone()
+
         if next_zone:
             self.current_zone = next_zone
             self.path_index += 1
-            self.state = DroneState.MOVING
+            self.set_status(DroneState.MOVING)
         else:
-            self.state = DroneState.DELIVERED
+            self.set_status(DroneState.DELIVERED)
 
     def is_delivered(self) -> bool:
         """Return True if the drone has reached the delivered state."""
         return self.state == DroneState.DELIVERED
+
+    def set_status(self, status: DroneState) -> None:
+        """Set the drone's state to the specified status."""
+        self.state = status
 
     def __repr__(self) -> str:
         return (
