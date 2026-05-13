@@ -39,7 +39,7 @@ class Parser:
                 lambda i: Drone(
                     _id=i + 1,
                     current_zone=self.start_zone,
-                    path=self.graph.dijkstra_path
+                    path=None
                 ),
                 range(self.nb_drones)
             )
@@ -97,10 +97,11 @@ class Parser:
                     else:
                         raise _errors.InvalidFormatError(
                             f'Unknowun key At line {line_n}')
-                self.start_zone = self.graph.zones['start']
-                self.end_zone = self.graph.zones.get('goal')  # type: ignore
-                if self.end_zone is None:
-                    self.end_zone = self.graph.zones['impossible_goal']
+            self.start_zone = self.graph.zones['start']
+            self.end_zone = self.graph.zones.get('goal')  # type: ignore
+            if self.end_zone is None:
+                self.end_zone = self.graph.zones['impossible_goal']
+            self.creat_drones()
         except OSError as exc:
             raise _errors.ParserFileNotFoundError(
                 f'cannot open file {self.file_path}'
