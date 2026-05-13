@@ -1,7 +1,15 @@
 """This module contains the Drone class which represents a drone entity."""
 
+from typing import TYPE_CHECKING
+
 from flyin._types._enums import DroneState
 from flyin.models.zone import Zone
+from flyin.models.connection import Connection
+from flyin._types._enums import ZoneCategory
+from flyin._types._enums import DroneState
+
+if TYPE_CHECKING:
+    from flyin.graph.graph import Graph
 
 
 class Drone:
@@ -18,7 +26,7 @@ class Drone:
     def __init__(
             self,
             _id: int,
-            current_zone: 'Zone',
+            current_zone: Zone,
             path: list['Zone'] | None,
             state: DroneState = DroneState.WAITING
     ) -> None:
@@ -28,19 +36,26 @@ class Drone:
         self.path_index = 0
         self.state = state
 
-    def next_zone(self) -> 'Zone | None':
+    def next_zone(self, graph: 'Graph') -> Zone | Connection | None:
         """Return the next zone in the planned path, if available."""
         if self.path is None or self.path_index + 1 >= len(self.path):
             return None
-        return self.path[self.path_index + 1]
+        zone = self.path[self.path_index + 1]
+        if (zone.category == ZoneCategory.RESTRICTED
+                and self.state != DroneState.IN_TRANSIT):
+            return graph.get_connection(self.current_zone, zone)
+        return zone
 
-    def move_next(self, next_zone: Zone) -> None:
+    def move_next(self, next_zone: Zone | Connection) -> None:
         "Move to next zone in the planned path"
 
         if next_zone:
             self.current_zone = next_zone
-            self.path_index += 1
-            self.set_status(DroneState.MOVING)
+            if isinstance(next_zone, Connection):
+                self.set_status(DroneState.IN_TRANSIT)
+            else:
+                self.path_index += 1
+                self.set_status(DroneState.MOVING)
         else:
             self.set_status(DroneState.DELIVERED)
 
