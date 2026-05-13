@@ -30,28 +30,11 @@ class Dijkstra:
 
         if start == end:
             return [start]
-        _map = self.dijkstra(start, end)
+        _map = self.find_all_posible_paths(start, end)
         if _map is None:
-            raise _errors.InvalidPathError('Path couldnt be find !!!')
-        self.graph.dijkstra_path = _map
+            raise _errors.InvalidPathError('no Path couldnt be found !!!')
+        self.graph.dijkstra_paths = _map[0][1] # hadi
         return _map
-        # return self._reconstruct_path(parent_map, start, end)
-
-    # def _reconstruct_path(
-    #     self,
-    #     parent_map: dict[Zone, Zone],
-    #     start: Zone,
-    #     goal: Zone,
-    # ) -> list[Zone]:
-    #     path = []
-    #     cur = goal
-    #     while cur != start:
-    #         path.append(cur)
-    #         cur = parent_map[cur]
-    #     path.append(start)
-    #     path.reverse()
-    #     self.graph.dijkstra_path = path
-    #     return path
 
     def _get_neighbors_and_sort(self, zone: Zone) -> list[Zone]:
         zones = self.graph.get_neighbors(zone)
@@ -62,29 +45,35 @@ class Dijkstra:
             )
         )
 
-    # TODO: rewrite djikstra algo to get all posible paths
-    def dijkstra(self, start: Zone, end: Zone) -> list[Zone] | None:
-        """Compute shortest path distances using Dijkstra's algorithm."""
+    # def score_path()
+
+    def find_all_posible_paths(
+            self, start: Zone, end: Zone
+            ) -> list[tuple[int, list[Zone]]] | None:
+        """Compute shortest path distances using Dijkstra's algorithm.
+
+        Args:
+            start (Zone): start zone obj in map
+            end (Zone): end zone obj in map
+
+        Returns:
+            list[Zone] | None: list of possible path
+        """
 
         counter = itertools.count()
-        paths_ruselts: list[tuple[int, list[Zone]]] = []
+        paths_results: list[tuple[int, list[Zone]]] = []
         pqueue: list[tuple[int, int, list[Zone]]] = [
             (0, next(counter), [start])
         ]
-        distances = {zone: float('inf') for zone in self.graph.zones.values()}
         path_found = False
 
-        distances[start] = 0
         while pqueue:
             cur_cost, _, cur_path = heapq.heappop(pqueue)
 
-            if cur_cost > distances[cur_path[-1]]:
-                continue
-
-            if cur_path[-1] == end:  # cur_path[-1]
+            if cur_path[-1] == end:
                 path_found = True
-                paths_ruselts.append((cur_cost, cur_path))
-                break
+                paths_results.append((cur_cost, cur_path))
+                continue
 
             neighbors = self._get_neighbors_and_sort(cur_path[-1])
             for neighbor in neighbors:
@@ -92,9 +81,8 @@ class Dijkstra:
                     continue
                 if neighbor not in cur_path:
                     new_cost = cur_cost + neighbor.get_movement_cost()
-                    distances[neighbor] = new_cost
                     heapq.heappush(
                         pqueue,
                         (new_cost, next(counter), cur_path + [neighbor])
                     )
-        return paths_ruselts[0][1] if path_found else None
+        return paths_results if path_found else None
