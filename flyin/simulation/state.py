@@ -11,10 +11,14 @@ class StateGraph:
     """Track occupied zones and connection usage in the simulation."""
 
     def __init__(self) -> None:
-        self.occupied_zones: dict[Zone, list[Drone]] = defaultdict(list)
+        self.occupied_zones: dict[Zone | Connection, list[Drone]] = (
+            defaultdict(list)
+        )
         self.connection_usage: dict[Connection, list[Drone]] = defaultdict(int)
 
-    def reserve_zone(self, zone: Zone | None, drone: Drone) -> bool:
+    def reserve_zone(
+            self, zone: Zone | None | Connection, drone: Drone
+            ) -> bool:
         """reserve a zone by a drone
 
         Args:
@@ -32,7 +36,7 @@ class StateGraph:
         self.occupied_zones[zone].append(drone)
         return True
 
-    def is_zone_occupied(self, zone: Zone | None) -> bool:
+    def is_zone_occupied(self, zone: Zone | Connection | None) -> bool:
         """Validate if zone is free to use or not
 
         Args:
@@ -42,11 +46,16 @@ class StateGraph:
             bool: True if zone is occupied, False zone not found or not free
         """
 
+        if not zone:
+            return False
         drones_in_zone = self.occupied_zones.get(zone, None)
         if drones_in_zone:
+            # im here confused what to do with max drones
+            if isinstance(zone, Connection):
+                if len(drones_in_zone) >= zone.max_link_capacity:
+                    return True
             if len(drones_in_zone) >= zone.max_drones:
                 return True
-        return False
 
     def free_zone(self, zone: Zone, drone: Drone) -> bool:
         """Remove a drone from a zone.
@@ -103,19 +112,6 @@ class StateGraph:
                 return True
         return False
 
-    def free_connection(self, connection: Connection, drone: Drone) -> bool:
-        """Remove a drone from a connection.
-
-        Args:
-            connection (Connection): connection from the map
-            drone (Drone): drone from the map
-
-        Returns:
-            bool: True if the drone was removed successfully, False otherwise
-        """
-
-        drones = self.connection_usage.get(connection)
-        if not drones or drone not in drones:
-            return False
-        drones.remove(drone)
-        return True
+    def reset_connection_usage(self) -> None:
+        """Reset all connection usages."""
+        self.connection_usage = defaultdict(list)
