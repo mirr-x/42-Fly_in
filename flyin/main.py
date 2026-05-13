@@ -58,17 +58,17 @@ def main() -> None:
         )
         # finding path phase
         dijkstra = Dijkstra(parsed.graph)
-        shortest_path = dijkstra.run(
+        all_shortest_path = dijkstra.run(
             parsed.start_zone,
             parsed.end_zone
         )
-        print(shortest_path)
+        print(all_shortest_path)
+        print(len(all_shortest_path))
         # drone simulations phase
         print()
-        parsed.creat_drones()
+        simulation_engein = Simulator(parsed.graph.drones, parsed.graph)
         print(parsed.graph.drones)
         print()
-        simulation_engein = Simulator(parsed.graph.drones, parsed.graph)
         simulation_engein.run()
     except _errors.InvalidPathError as exc:
         logging.warning('Path Error: %s', exc)
