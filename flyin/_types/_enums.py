@@ -56,5 +56,6 @@ class MapsTool(Enum):
 class DroneState(Enum):
     """Possible states for a drone."""
     MOVING = 'moving'
+    IN_TRANSIT = 'in_transit'
     WAITING = 'waiting'
     DELIVERED = 'delivered'
