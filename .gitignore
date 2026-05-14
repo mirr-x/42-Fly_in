@@ -1,4 +1,13 @@
-*.pyc
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.mypy_cache/
+.pytest_cache/
+.venv/
+venv/
+env/
+*.egg-info/
+build/
+dist/
 mp.json
-__pycashe__
-xx
