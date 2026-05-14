@@ -4,6 +4,7 @@ from flyin.models.zone import Zone
 from flyin.models.connection import Connection
 from flyin.models.drone import Drone
 from flyin.parser import _errors
+from flyin._types import RoleZone
 
 
 class Graph:
@@ -96,4 +97,7 @@ class Graph:
         Returns:
             Zone | None: The start zone if it exists, None otherwise
         """
-        return self.zones.get('start')
+        for zone in self.zones.values():
+            if zone.role is RoleZone.STARTING:
+                return zone
+        return None
