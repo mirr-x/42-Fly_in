@@ -6,7 +6,6 @@ from flyin._types._enums import DroneState
 from flyin.models.zone import Zone
 from flyin.models.connection import Connection
 from flyin._types._enums import ZoneCategory
-from flyin._types._enums import DroneState
 
 if TYPE_CHECKING:
     from flyin.graph.graph import Graph
