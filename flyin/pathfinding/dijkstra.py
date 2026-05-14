@@ -33,7 +33,7 @@ class Dijkstra:
         _map = self.find_all_posible_paths(start, end)
         if _map is None:
             raise _errors.InvalidPathError('no Path couldnt be found !!!')
-        self.graph.dijkstra_paths = _map[0][1] # hadi
+        self.graph.dijkstra_paths = _map
         return _map
 
     def _get_neighbors_and_sort(self, zone: Zone) -> list[Zone]:
@@ -45,7 +45,16 @@ class Dijkstra:
             )
         )
 
-    # def score_path()
+    def _valid_path_add(
+            self,
+            paths_results: list[tuple[int, list[Zone]]],
+            cur_cost: int,
+            cur_path: list[Zone]
+            ) -> bool:
+        if paths_results and cur_cost != paths_results[0][0]:
+            return False
+        paths_results.append((cur_cost, cur_path))
+        return True
 
     def find_all_posible_paths(
             self, start: Zone, end: Zone
@@ -66,13 +75,15 @@ class Dijkstra:
             (0, next(counter), [start])
         ]
         path_found = False
-
-        while pqueue:
+        l_drone = len(self.graph.drones)
+        while pqueue and l_drone != 0:
             cur_cost, _, cur_path = heapq.heappop(pqueue)
 
             if cur_path[-1] == end:
+                if not self._valid_path_add(paths_results, cur_cost, cur_path):
+                    break
                 path_found = True
-                paths_results.append((cur_cost, cur_path))
+                l_drone -= 1
                 continue
 
             neighbors = self._get_neighbors_and_sort(cur_path[-1])
