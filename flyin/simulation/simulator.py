@@ -8,7 +8,6 @@ from flyin.simulation.state import StateGraph
 from flyin._types._enums import DroneState
 
 
-# TODO: NEDS TESTINS CAUSE IVE JUST imlemented in_transit functunalty
 class Simulator:
     """Manages drone simulation and movement on a graph.
 
@@ -32,8 +31,7 @@ class Simulator:
             ) -> Connection | None:
         if drone.state == DroneState.IN_TRANSIT:
             return drone.current_zone
-        else:
-            return self.graph.get_connection(drone.current_zone, next_zone)
+        return self.graph.get_connection(drone.current_zone, next_zone)
 
     def _process_turn(self, counter: int) -> str:
         movements = []
@@ -67,13 +65,13 @@ class Simulator:
     def _assign_paths_to_drones(self, drones: list[Drone]) -> None:
         """Assign precomputed shortest paths to each drone."""
 
-        paths = self.graph.dijkstra_paths # hadi
+        paths = self.graph.dijkstra_paths
         l_paths = len(paths)
         i = 0
         for dron in drones:
             if i == l_paths:
                 i = 0
-            dron.path = paths
+            dron.path = paths[i][1]
             i += 1
 
     def run(self) -> None:
