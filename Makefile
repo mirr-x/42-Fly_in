@@ -1,3 +1,28 @@
+PYTHON ?= python3
+PIP ?= pip3
+MAP ?= maps/easy/01_linear_path.txt
+
+.PHONY: install run debug clean lint lint-strict
+
+install:
+	$(PIP) install --upgrade pip
+	$(PIP) install flake8 mypy
 
 run:
-	python -m flyin.main maps/easy/01_linear_path.txt
+	$(PYTHON) -m flyin.main $(MAP)
+
+debug:
+	$(PYTHON) -m pdb -m flyin.main $(MAP)
+
+clean:
+	find . -type d -name "__pycache__" -exec rm -r {} +
+	rm -rf .mypy_cache .pytest_cache
+
+lint:
+	flake8 .
+	mypy . --warn-return-any --warn-unused-ignores --ignore-missing-imports \
+		--disallow-untyped-defs --check-untyped-defs
+
+lint-strict:
+	flake8 .
+	mypy . --strict
