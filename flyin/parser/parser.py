@@ -1,5 +1,6 @@
 """This Module is used to handle All parsing in Fly-in project"""
 
+from typing import Optional
 
 from flyin.models.zone import Zone
 from flyin.models.connection import Connection
@@ -29,8 +30,8 @@ class Parser:
         self.file_path = file_path
         self.graph = map_graph
         self.nb_drones = 0
-        self.start_zone: Zone
-        self.end_zone: Zone
+        self.start_zone: Optional[Zone] = None
+        self.end_zone: Optional[Zone] = None
 
     def creat_drones(self) -> None:
         """Create drones for the graph based on the number specified."""
@@ -45,7 +46,7 @@ class Parser:
             )
         )
 
-    def _handle_zones(self, key: str, val: str, line_n) -> None:
+    def _handle_zones(self, key: str, val: str, line_n: int) -> None:
         list_zones = list(self.graph.zones.values())
         role = _get_role_and_validate_it(key, list_zones, line_n)
         name, cord, meta_data = _parse_zone_values(val, list_zones, line_n)
@@ -63,6 +64,10 @@ class Parser:
             category=category
         )
         self.graph.add_zone(temp_zone)
+        if role is RoleZone.STARTING:
+            self.start_zone = temp_zone
+        elif role is RoleZone.ENDING:
+            self.end_zone = temp_zone
 
     def _handle_connctions(self, val: str, line_n) -> None:
         zones = list(self.graph.zones.values())
@@ -83,13 +88,25 @@ class Parser:
 
         try:
             with open(self.file_path, 'r', encoding='utf-8') as f:
+                first_data_line = True
+                nb_drones_seen = False
                 for line_n, line in enumerate(f, start=1):
                     striped = line.strip()
                     if not striped or striped.startswith('#'):
                         continue
                     key, val = _validate_missing_key_val(striped, ':', line_n)
+                    if first_data_line and key != 'nb_drones':
+                        raise _errors.InvalidFormatError(
+                            f'nb_drones must be the first line (line {line_n})'
+                        )
                     if key == 'nb_drones':
+                        if not first_data_line and nb_drones_seen:
+                            raise _errors.InvalidFormatError(
+                                'nb_drones must be the first line '
+                                f'(line {line_n})'
+                            )
                         self.nb_drones = _validate_drones(val, line_n)
+                        nb_drones_seen = True
                     elif key in RoleZone:
                         self._handle_zones(key, val, line_n)
                     elif key == MapsTool.CONNECTION.value:
@@ -97,18 +114,19 @@ class Parser:
                     else:
                         raise _errors.InvalidFormatError(
                             f'Unknowun key At line {line_n}')
-            self.start_zone = self.graph.zones['start']
-            self.end_zone = self.graph.zones.get('goal')  # type: ignore
-            if self.end_zone is None:
-                self.end_zone = self.graph.zones['impossible_goal']
+                    first_data_line = False
+                if not nb_drones_seen:
+                    raise _errors.InvalidFormatError(
+                        'nb_drones must be the first line'
+                    )
+                if self.start_zone is None or self.end_zone is None:
+                    raise _errors.ElementNotFoundError(
+                        'start_hub/end_hub not found'
+                    )
             self.creat_drones()
         except OSError as exc:
             raise _errors.ParserFileNotFoundError(
                 f'cannot open file {self.file_path}'
-            ) from exc
-        except KeyError as exc:
-            raise _errors.ElementNotFoundError(
-                'start_hub/end_hub not found'
             ) from exc
         else:
             self.graph.build_adjacency()
