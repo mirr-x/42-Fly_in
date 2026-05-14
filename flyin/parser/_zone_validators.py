@@ -1,6 +1,6 @@
 """This file containe internal helper functions for validation Parsing"""
 
-from flyin._types import ZoneCategory, ColorZone, RoleZone, Cord, MetaData
+from flyin._types import ZoneCategory, RoleZone, Cord, MetaData
 from flyin.parser import _errors
 from flyin.models.zone import Zone
 
@@ -26,7 +26,7 @@ def _validate_missing_key_val(s: str, sep: str, line_n: int) -> list[str]:
             f'Missing colon seprator in line {line_n}'
         )
     parts[0] = (parts[0].strip()).lower()
-    parts[1] = (parts[1].strip()).lower()
+    parts[1] = parts[1].strip()
     if not parts[0] or not parts[1]:
         raise _errors.InvalidFormatError(
             f'missing format <key>: <val> in line {line_n}')
@@ -50,19 +50,10 @@ def _validate_cords(x: str, y: str, line_n: int) -> Cord:
 
 def _get_corect_cost(category: str, line_n: int) -> ZoneCategory:
     try:
-        return ZoneCategory(category)
+        return ZoneCategory(category.strip().lower())
     except ValueError as exc:
         raise _errors.InvalidValueError(
             f'Unknowun zone category At line {line_n}'
-        ) from exc
-
-
-def _get_corect_color(color: str, line_n: int) -> ColorZone:
-    try:
-        return ColorZone(color)
-    except ValueError as exc:
-        raise _errors.InvalidValueError(
-            f'Unknowun color type At line {line_n}'
         ) from exc
 
 
@@ -81,7 +72,7 @@ def _validate_meta_data(val: str, line_n: int) -> MetaData:
         if key == 'zone':
             meta_data['category'] = _get_corect_cost(_val, line_n)
         elif key == 'color':
-            meta_data['color'] = _get_corect_color(_val, line_n)
+            meta_data['color'] = _val
         elif key == 'max_drones':
             meta_data['max_drones'] = _validate_drones(_val, line_n)
         else:
