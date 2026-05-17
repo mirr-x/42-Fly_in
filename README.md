@@ -1,6 +1,5 @@
 
-
-*This project has been created as part of the 42 curriculum by molahrac.*
+This project has been created as part of the 42 curriculum by molahrac.*
 
 ## Description
 Fly-in is a Python simulation that routes multiple drones through connected zones
