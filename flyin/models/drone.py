@@ -42,7 +42,8 @@ class Drone:
         zone = self.path[self.path_index + 1]
         if (zone.category == ZoneCategory.RESTRICTED
                 and self.state != DroneState.IN_TRANSIT):
-            return graph.get_connection(self.current_zone, zone)
+            return graph.get_connection(
+                self.current_zone, zone)  # pyright: ignore[reportArgumentType]
         return zone
 
     def move_next(self, next_zone: Zone | Connection) -> None:
