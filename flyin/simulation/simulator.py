@@ -1,10 +1,11 @@
 """Simulator module for simulating drone movement."""
 
+from flyin.parser import _errors
 from flyin.models.drone import Drone
 from flyin.models.connection import Connection
 from flyin.models.zone import Zone
 from flyin.graph.graph import Graph
-from flyin.simulation.state import StateGraph
+from .state import StateGraph
 from flyin._types._enums import DroneState
 
 
@@ -30,10 +31,18 @@ class Simulator:
             self, drone: Drone, next_zone: Zone | Connection | None
             ) -> Connection | None:
         if drone.state == DroneState.IN_TRANSIT:
-            return drone.current_zone
-        return self.graph.get_connection(drone.current_zone, next_zone)
+            if isinstance(drone.current_zone, Connection):
+                return drone.current_zone
+            return None
+        if isinstance(next_zone, Connection):
+            return next_zone
+        if isinstance(drone.current_zone, Zone) and isinstance(
+            next_zone, Zone
+        ):
+            return self.graph.get_connection(drone.current_zone, next_zone)
+        return None
 
-    def _process_turn(self, counter: int) -> str:
+    def _process_turn(self, counter: int) -> None:
         movements = []
         for drone in self.drones:
             if drone.is_delivered():
@@ -66,6 +75,8 @@ class Simulator:
         """Assign precomputed shortest paths to each drone."""
 
         paths = self.graph.dijkstra_paths
+        if paths is None:
+            raise _errors.InvalidPathError('No path data available')
         l_paths = len(paths)
         i = 0
         for dron in drones:

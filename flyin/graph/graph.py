@@ -15,7 +15,7 @@ class Graph:
         self.zones: dict[str, Zone] = {}
         self.connections: list[Connection] = []
         self.adjacency_map: dict[Zone, list[Zone]] = {}
-        self.dijkstra_paths: list[tuple[int, list[Zone]]] | None = None
+        self.dijkstra_paths: list[tuple[float, list[Zone]]] | None = None
 
     def add_zone(self, zone: Zone) -> None:
         """Add zone to the zones dict <ZoneRole>: Zone

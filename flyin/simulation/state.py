@@ -1,20 +1,22 @@
 """Module for managing simulation state and drone zone allocation."""
 
+from collections import defaultdict
+
 from flyin.models.zone import Zone
 from flyin.models.drone import Drone
 from flyin.models.connection import Connection
-
-from collections import defaultdict
 
 
 class StateGraph:
     """Track occupied zones and connection usage in the simulation."""
 
     def __init__(self) -> None:
-        self.occupied_zones: dict[Zone | Connection, list[Drone]] = (
+        self.occupied_zones: defaultdict[Zone | Connection, list[Drone]] = (
             defaultdict(list)
         )
-        self.connection_usage: dict[Connection, list[Drone]] = defaultdict(int)
+        self.connection_usage: defaultdict[Connection, list[Drone]] = (
+            defaultdict(list)
+        )
 
     def reserve_zone(
             self, zone: Zone | None | Connection, drone: Drone
@@ -46,18 +48,19 @@ class StateGraph:
             bool: True if zone is occupied, False zone not found or not free
         """
 
-        if not zone:
+        if zone is None:
             return False
         drones_in_zone = self.occupied_zones.get(zone, None)
         if drones_in_zone:
-            # im here confused what to do with max drones
             if isinstance(zone, Connection):
                 if len(drones_in_zone) >= zone.max_link_capacity:
                     return True
-            if len(drones_in_zone) >= zone.max_drones:
+            if (isinstance(zone, Zone) and
+                    len(drones_in_zone) >= zone.max_drones):
                 return True
+        return False
 
-    def free_zone(self, zone: Zone, drone: Drone) -> bool:
+    def free_zone(self, zone: Zone | Connection, drone: Drone) -> bool:
         """Remove a drone from a zone.
 
         Args:
@@ -106,6 +109,8 @@ class StateGraph:
             bool: True if connection is used, False connection not free
         """
 
+        if connection is None:
+            return False
         drones_in_zone = self.connection_usage.get(connection)
         if drones_in_zone:
             if len(drones_in_zone) >= connection.max_link_capacity:

@@ -17,7 +17,7 @@ class Dijkstra:
     def __init__(self, graph: Graph) -> None:
         self.graph = graph
 
-    def run(self, start: Zone, end: Zone) -> list[Zone]:
+    def run(self, start: Zone, end: Zone) -> list[tuple[float, list[Zone]]]:
         """Return the shortest costing path from start to end.
 
         Args:
@@ -25,11 +25,11 @@ class Dijkstra:
             end: Destination zone.
 
         Returns:
-            A list of zones representing the shortest path.
+            A list of scored paths, each path stored as (cost, zones).
         """
 
         if start == end:
-            return [start]
+            return [(0, [start])]
         _map = self.find_all_posible_paths(start, end)
         if _map is None:
             raise _errors.InvalidPathError('no Path couldnt be found !!!')
@@ -47,8 +47,8 @@ class Dijkstra:
 
     def _valid_path_add(
             self,
-            paths_results: list[tuple[int, list[Zone]]],
-            cur_cost: int,
+            paths_results: list[tuple[float, list[Zone]]],
+            cur_cost: float,
             cur_path: list[Zone]
             ) -> bool:
         if paths_results and cur_cost != paths_results[0][0]:
@@ -58,7 +58,7 @@ class Dijkstra:
 
     def find_all_posible_paths(
             self, start: Zone, end: Zone
-            ) -> list[tuple[int, list[Zone]]] | None:
+            ) -> list[tuple[float, list[Zone]]] | None:
         """Compute shortest path distances using Dijkstra's algorithm.
 
         Args:
@@ -70,8 +70,8 @@ class Dijkstra:
         """
 
         counter = itertools.count()
-        paths_results: list[tuple[int, list[Zone]]] = []
-        pqueue: list[tuple[int, int, list[Zone]]] = [
+        paths_results: list[tuple[float, list[Zone]]] = []
+        pqueue: list[tuple[float, int, list[Zone]]] = [
             (0, next(counter), [start])
         ]
         path_found = False
@@ -92,8 +92,11 @@ class Dijkstra:
                     continue
                 if neighbor not in cur_path:
                     new_cost = cur_cost + neighbor.get_movement_cost()
-                    heapq.heappush(
-                        pqueue,
-                        (new_cost, next(counter), cur_path + [neighbor])
+                    new_path: list[Zone] = cur_path + [neighbor]
+                    heap_item: tuple[float, int, list[Zone]] = (
+                        new_cost,
+                        next(counter),
+                        new_path,
                     )
+                    heapq.heappush(pqueue, heap_item)
         return paths_results if path_found else None

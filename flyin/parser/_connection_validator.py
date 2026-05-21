@@ -30,7 +30,7 @@ def _validate_meta_data_con(val: str, line_n: int) -> MetaData:
     if not val.strip():
         raise _errors.InvalidFormatError(f'Empty metaData At line {line_n}')
     parts = val.split(" ")
-    meta_data = {}
+    meta_data: MetaData = {}
     for i in parts:
         key, _val = _validate_missing_key_val(i, '=', line_n)
         if key == 'max_link_capacity':

@@ -12,7 +12,6 @@ from flyin.parser._zone_validators import (
     _validate_missing_key_val,
     _get_role_and_validate_it,
     _parse_zone_values,
-    _get_max_drones,
     _validate_drones
 )
 from flyin.parser._connection_validator import _parse_connec_vals
@@ -35,11 +34,13 @@ class Parser:
 
     def creat_drones(self) -> None:
         """Create drones for the graph based on the number specified."""
+        assert self.start_zone is not None
+        start_zone = self.start_zone
         self.graph.drones = list(
             map(
                 lambda i: Drone(
                     _id=i + 1,
-                    current_zone=self.start_zone,
+                    current_zone=start_zone,
                     path=None
                 ),
                 range(self.nb_drones)
@@ -52,9 +53,15 @@ class Parser:
         name, cord, meta_data = _parse_zone_values(val, list_zones, line_n)
         max_drones, color, category = 1, None, ZoneCategory.NORMAL
         if meta_data:
-            max_drones = _get_max_drones(meta_data, line_n)
-            color = meta_data.get('color', None)
-            category = meta_data.get('category', ZoneCategory.NORMAL)
+            max_drones_value = meta_data.get('max_drones')
+            if isinstance(max_drones_value, int):
+                max_drones = max_drones_value
+            color_value = meta_data.get('color')
+            if isinstance(color_value, str):
+                color = color_value
+            category_value = meta_data.get('category')
+            if isinstance(category_value, ZoneCategory):
+                category = category_value
         temp_zone = Zone(
             name=name,
             cord=cord,
@@ -69,13 +76,15 @@ class Parser:
         elif role is RoleZone.ENDING:
             self.end_zone = temp_zone
 
-    def _handle_connctions(self, val: str, line_n) -> None:
+    def _handle_connctions(self, val: str, line_n: int) -> None:
         zones = list(self.graph.zones.values())
         connec = self.graph.connections
         zone_a, zone_b, data = _parse_connec_vals(val, zones, connec, line_n)
         max_capacity = 1
         if data:
-            max_capacity = data.get('max_link_capacity', 1)
+            max_capacity_value = data.get('max_link_capacity')
+            if isinstance(max_capacity_value, int):
+                max_capacity = max_capacity_value
         tmp_conction = Connection(zone_a, zone_b, max_capacity)
         self.graph.add_connection(tmp_conction)
 

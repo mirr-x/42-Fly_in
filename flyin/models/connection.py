@@ -1,7 +1,6 @@
 """This module defines a connections between two zones"""
 
 from flyin.models.zone import Zone
-from flyin._types import Optional
 
 
 class Connection:
@@ -16,7 +15,7 @@ class Connection:
                 self,
                 zone_a: Zone,
                 zone_b: Zone,
-                max_link_capacity: Optional[int] = 1
+                max_link_capacity: int = 1
             ) -> None:
         self.zone_a = zone_a
         self.zone_b = zone_b

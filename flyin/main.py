@@ -52,6 +52,8 @@ def main() -> None:
     try:
         parsed = Parser(sys.argv[1], map_graph=Graph())
         parsed.parsing()
+        assert parsed.start_zone is not None
+        assert parsed.end_zone is not None
         print_zones_and_connections(
             parsed.graph.zones,
             parsed.graph.connections

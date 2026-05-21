@@ -41,10 +41,6 @@ def _validate_cords(x: str, y: str, line_n: int) -> Cord:
         raise _errors.InvalidCordsError(
             f'Cords should be included At line {line_n}'
         ) from exc
-    # if v1 < 0 or v2 < 0:
-    #     raise _errors.InvalidCordsError(
-    #         f'Cords cannot be >= 0 At line {line_n}'
-    #     )
     return (v1, v2)
 
 
@@ -66,7 +62,7 @@ def _validate_meta_data(val: str, line_n: int) -> MetaData:
     if not val.strip():
         raise _errors.InvalidFormatError(f'Empty metaData At line {line_n}')
     parts = val.split(" ")
-    meta_data = {}
+    meta_data: MetaData = {}
     for i in parts:
         key, _val = _validate_missing_key_val(i, '=', line_n)
         if key == 'zone':
@@ -140,7 +136,7 @@ def _get_role_and_validate_it(
             f'Unknowun role type At line {line_n}') from exc
 
 
-def _get_max_drones(meta_data: MetaData, line_n) -> int:
+def _get_max_drones(meta_data: MetaData, line_n: int) -> int:
     max_drones = meta_data.get('max_drones', 1)
     if not isinstance(max_drones, int):
         raise _errors.InvalidValueError(

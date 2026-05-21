@@ -25,7 +25,7 @@ class Drone:
     def __init__(
             self,
             _id: int,
-            current_zone: Zone,
+            current_zone: Zone | Connection,
             path: list['Zone'] | None,
             state: DroneState = DroneState.WAITING
     ) -> None:
@@ -42,11 +42,12 @@ class Drone:
         zone = self.path[self.path_index + 1]
         if (zone.category == ZoneCategory.RESTRICTED
                 and self.state != DroneState.IN_TRANSIT):
-            return graph.get_connection(
-                self.current_zone, zone)  # pyright: ignore[reportArgumentType]
+            if isinstance(self.current_zone, Zone):
+                return graph.get_connection(self.current_zone, zone)
+            return None
         return zone
 
-    def move_next(self, next_zone: Zone | Connection) -> None:
+    def move_next(self, next_zone: Zone | Connection | None) -> None:
         "Move to next zone in the planned path"
 
         if next_zone:

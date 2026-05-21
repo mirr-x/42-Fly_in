@@ -47,7 +47,7 @@ class BFS:
         return path
 
     def _bfs(self, start: Zone, end: Zone) -> Optional[dict[Zone, Zone]]:
-        queue = collections.deque()
+        queue: collections.deque[Zone] = collections.deque()
         visited = set()
         parent_map = {}
         path_found = False
