@@ -24,5 +24,5 @@ lint:
 		--disallow-untyped-defs --check-untyped-defs --exclude ./.venv
 
 lint-strict:
-	flake8 .
-	mypy . --strict
+	flake8 . --exclude ./.venv
+	mypy . --strict --exclude ./.venv
