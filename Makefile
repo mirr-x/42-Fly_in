@@ -1,5 +1,5 @@
-PYTHON ?= python3
-PIP ?= pip3
+PYTHON = python3
+PIP = pip3
 MAP ?= maps/easy/01_linear_path.txt
 
 .PHONY: install run debug clean lint lint-strict
@@ -19,9 +19,9 @@ clean:
 	rm -rf .mypy_cache .pytest_cache
 
 lint:
-	flake8 .
+	flake8 . --exclude=./.venv
 	mypy . --warn-return-any --warn-unused-ignores --ignore-missing-imports \
-		--disallow-untyped-defs --check-untyped-defs
+		--disallow-untyped-defs --check-untyped-defs --exclude ./.venv
 
 lint-strict:
 	flake8 .
