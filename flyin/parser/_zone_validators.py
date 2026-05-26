@@ -1,6 +1,6 @@
 """This file containe internal helper functions for validation Parsing"""
 
-from flyin._types import ZoneCategory, RoleZone, Cord, MetaData
+from flyin._types import ZoneCategory, RoleZone, Cord, MetaData, ColorZone
 from flyin.parser import _errors
 from flyin.models.zone import Zone
 
@@ -66,9 +66,9 @@ def _validate_meta_data(val: str, line_n: int) -> MetaData:
     for i in parts:
         key, _val = _validate_missing_key_val(i, '=', line_n)
         if key == 'zone':
-            meta_data['category'] = _get_corect_cost(_val, line_n)
+            meta_data['category'] = _get_corect_cost(_val, line_n)  # try to make random clor and test if it gonna work
         elif key == 'color':
-            meta_data['color'] = _val
+            meta_data['color'] = ColorZone[_val.upper()]
         elif key == 'max_drones':
             meta_data['max_drones'] = _validate_drones(_val, line_n)
         else:
