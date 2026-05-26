@@ -1,8 +1,7 @@
 """This module defines a Zone that represents a location on the map."""
 
-from typing import Optional
 
-from flyin._types import RoleZone, ZoneCategory, Cord
+from flyin._types import RoleZone, ZoneCategory, Cord, ColorZone
 from flyin.parser import _errors
 
 
@@ -24,7 +23,7 @@ class Zone:
                 cord: Cord,
                 role: RoleZone,
                 max_drones: int = 1,
-                color: Optional[str] = None,
+                color: ColorZone = ColorZone.BLUE,
                 category: ZoneCategory = ZoneCategory.NORMAL
                 ) -> None:
         self.name = name
