@@ -10,6 +10,7 @@
 
 import sys
 import logging
+
 from flyin.parser import _errors
 from flyin.parser.parser import Parser
 from flyin.graph.graph import Graph
@@ -17,6 +18,7 @@ from flyin.models.zone import Zone
 from flyin.models.connection import Connection
 from flyin.pathfinding.dijkstra import Dijkstra
 from flyin.simulation.simulator import Simulator
+from flyin.visual.renderer import Renderer
 
 
 def print_zones_and_connections(
@@ -72,6 +74,9 @@ def main() -> None:
         print(parsed.graph.drones)
         print()
         simulation_engein.run()
+        # visualution full map and drones phase
+        visualator = Renderer(parsed.graph)
+        visualator.run()
     except _errors.InvalidPathError as exc:
         logging.warning('Path Error: %s', exc)
     except _errors.InsaneError as exc:
