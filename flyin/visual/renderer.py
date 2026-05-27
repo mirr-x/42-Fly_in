@@ -2,6 +2,7 @@
 
 import pygame
 
+from flyin.models.drone import Drone
 from flyin.visual.colors_config import (
     BACKGROUND, WIDTH, HEIGHT, EDGE, TEXT
 )
@@ -20,16 +21,13 @@ class Renderer:
         """
 
         self.graph = graph
-
-        pygame.init()  # pylint: disable=no-member
+        self.pygame = pygame
+        self.pygame.init()  # pylint: disable=no-member
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
-        pygame.display.set_caption("Fly-in Graph Viewer")
-
+        self.pygame.display.set_caption("Fly-in Graph Viewer")
         self.clock = pygame.time.Clock()
         self.font = pygame.font.SysFont("Arial", 14)
-
         self.running = True
-
         self.layout = GraphLayout(width=WIDTH, height=HEIGHT)
 
     def get_color(self, zone: Zone) -> tuple[int, int, int]:
@@ -43,7 +41,7 @@ class Renderer:
         """
         return zone.color.value
 
-    def draw_edges(self):
+    def draw_edges(self) -> None:
         """Draw every connection as a line between its endpoint zones."""
 
         for conn in self.graph.connections:
@@ -53,23 +51,50 @@ class Renderer:
             x1, y1 = self.layout.to_screen(a)
             x2, y2 = self.layout.to_screen(b)
 
-            pygame.draw.line(self.screen, EDGE, (x1, y1), (x2, y2), 2)
-            pygame.display.flip()
-            pygame.time.delay(300)
+            self.pygame.draw.line(self.screen, EDGE, (x1, y1), (x2, y2), 2)
+            self.pygame.display.flip()
+            self.pygame.time.delay(300)
 
-    def draw_nodes(self):
+    def draw_nodes(self) -> None:
         """Draw each zone as a colored circle with its name label."""
 
         for zone in self.graph.zones.values():
             x, y = self.layout.to_screen(zone)
-            pygame.draw.circle(self.screen, self.get_color(zone), (x, y), 15)
+            self.pygame.draw.circle(
+                self.screen, self.get_color(zone), (x, y), 15
+            )
 
             text = self.font.render(zone.name, True, TEXT)
             self.screen.blit(text, (x + 10, y - 30))
-            pygame.display.flip()
-            pygame.time.delay(300)
+            self.pygame.display.flip()
+            self.pygame.time.delay(300)
 
-    def run(self):
+    def draw_drones(self, drones: list[Drone]) -> None:
+        """draw drones at curnet state in self.pygame
+
+        Args:
+            drones (list[Drone]): cur drones at cur state
+        """
+
+        for drone in drones:
+            zone = drone.current_zone
+            if isinstance(zone, Zone):
+                x, y = self.layout.to_screen(zone)
+                self.pygame.draw.circle(self.screen, (255, 255, 255), (x, y), 6)
+
+                text = self.font.render(drone.id, True, TEXT)
+                self.screen.blit(text, (x + 20, y - 40))
+                self.pygame.display.flip()
+                self.pygame.time.delay(300)
+
+    def draw_turn(self, turn: int) -> None:
+        """Draw current turn text in the bottom-left corner."""
+
+        text = self.font.render(f"Turn: {turn}", True, TEXT)
+        y = HEIGHT - text.get_height() - 10
+        self.screen.blit(text, (10, y))
+
+    def render(self, turn: int, drones: list[Drone]) -> None:
         """Run the main render loop until the window is closed.
 
         Args:
@@ -79,21 +104,24 @@ class Renderer:
 
         # self.layout = layout
 
-        while self.running:
-            self.clock.tick(60)
-            self.handle_events()
+        # while self.running:
+        self.clock.tick(60)
+        self.handle_events()
 
-            self.screen.fill(BACKGROUND)
+        self.screen.fill(BACKGROUND)
 
-            self.draw_edges()
-            self.draw_nodes()
+        self.draw_edges()
+        self.draw_nodes()
+        self.draw_drones(drones)
+        self.draw_turn(turn)
+        self.pygame.time.delay(500)
 
-            pygame.display.flip()
+        self.pygame.display.flip()
 
-        pygame.quit()  # pylint: disable=no-member
+        # self.pygame.quit()  # pylint: disable=no-member
 
     def handle_events(self):
-        """Process pygame events and stop the loop when the window closes."""
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:  # pylint: disable=no-member
+        """Process self.pygame events and stop the loop when the window closes."""
+        for event in self.pygame.event.get():
+            if event.type == self.pygame.QUIT:  # pylint: disable=no-member
                 self.running = False
