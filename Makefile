@@ -7,7 +7,7 @@ MAP ?= maps/easy/01_linear_path.txt
 install:
 	$(PIP) install --upgrade pip
 	$(PIP) install flake8 mypy
-	$(PIP) install pygame-ce
+	$(PIP) install pygame
 
 run:
 	$(PYTHON) -m flyin.main $(MAP)
