@@ -80,7 +80,9 @@ class Renderer:
             zone = drone.current_zone
             if isinstance(zone, Zone):
                 x, y = self.layout.to_screen(zone)
-                self.pygame.draw.circle(self.screen, (255, 255, 255), (x, y), 6)
+                self.pygame.draw.circle(
+                    self.screen, (255, 255, 255), (x, y), 6
+                )
 
                 text = self.font.render(drone.id, True, TEXT)
                 self.screen.blit(text, (x + 20, y - 40))
@@ -121,7 +123,7 @@ class Renderer:
         # self.pygame.quit()  # pylint: disable=no-member
 
     def handle_events(self):
-        """Process self.pygame events and stop the loop when the window closes."""
+        """Process pygame events and stop the loop when the window closes."""
         for event in self.pygame.event.get():
             if event.type == self.pygame.QUIT:  # pylint: disable=no-member
                 self.running = False
