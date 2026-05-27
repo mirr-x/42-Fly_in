@@ -68,15 +68,18 @@ def main() -> None:
         )
         print(all_shortest_path)
         print(len(all_shortest_path))
+        # visualution full map and drones phase
+        renderer = Renderer(parsed.graph)
         # drone simulations phase
         print()
-        simulation_engein = Simulator(parsed.graph.drones, parsed.graph)
         print(parsed.graph.drones)
         print()
+        simulation_engein = Simulator(
+            parsed.graph.drones,
+            parsed.graph,
+            renderer
+        )
         simulation_engein.run()
-        # visualution full map and drones phase
-        visualator = Renderer(parsed.graph)
-        visualator.run()
     except _errors.InvalidPathError as exc:
         logging.warning('Path Error: %s', exc)
     except _errors.InsaneError as exc:
