@@ -7,6 +7,7 @@ from flyin.models.zone import Zone
 from flyin.graph.graph import Graph
 from .state import StateGraph
 from flyin._types._enums import DroneState
+from flyin.visual.renderer import Renderer
 
 
 class Simulator:
@@ -17,10 +18,16 @@ class Simulator:
         graph (Graph): current graph obj has all map info
     """
 
-    def __init__(self, drones: list[Drone], graph: Graph) -> None:
+    def __init__(
+                self,
+                drones: list[Drone],
+                graph: Graph,
+                renderer: Renderer
+            ) -> None:
         self.drones = drones
         self.graph = graph
         self.state = StateGraph()
+        self.renderer = renderer
         self._init_all_drones_at_start_zone()
         self._assign_paths_to_drones(self.drones)
 
@@ -89,7 +96,9 @@ class Simulator:
         """Run the simulation."""
 
         counter = 1
-        while not self._all_delivered():
+        while self.renderer.running and not self._all_delivered():
             self._process_turn(counter)
+            self.renderer.render(counter, self.drones)
             self.state.reset_connection_usage()
             counter += 1
+        self.renderer.pygame.quit()
