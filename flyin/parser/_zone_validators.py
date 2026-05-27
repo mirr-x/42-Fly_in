@@ -53,6 +53,15 @@ def _get_corect_cost(category: str, line_n: int) -> ZoneCategory:
         ) from exc
 
 
+def _get_corect_color(color: str, line_n: int) -> ColorZone:
+    try:
+        return ColorZone[color]
+    except KeyError as exc:
+        raise _errors.InvalidValueError(
+            f'Unknowun color {color} At line {line_n}'
+        ) from exc
+
+
 def _validate_meta_data(val: str, line_n: int) -> MetaData:
     if not (val.startswith('[') and val.endswith(']')):
         raise _errors.InvalidFormatError(
@@ -66,9 +75,9 @@ def _validate_meta_data(val: str, line_n: int) -> MetaData:
     for i in parts:
         key, _val = _validate_missing_key_val(i, '=', line_n)
         if key == 'zone':
-            meta_data['category'] = _get_corect_cost(_val, line_n)  # try to make random clor and test if it gonna work
+            meta_data['category'] = _get_corect_cost(_val, line_n)
         elif key == 'color':
-            meta_data['color'] = ColorZone[_val.upper()]
+            meta_data['color'] = _get_corect_color(_val.upper(), line_n)
         elif key == 'max_drones':
             meta_data['max_drones'] = _validate_drones(_val, line_n)
         else:
