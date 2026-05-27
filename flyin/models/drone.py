@@ -37,6 +37,7 @@ class Drone:
 
     def next_zone(self, graph: 'Graph') -> Zone | Connection | None:
         """Return the next zone in the planned path, if available."""
+
         if self.path is None or self.path_index + 1 >= len(self.path):
             return None
         zone = self.path[self.path_index + 1]
@@ -66,6 +67,7 @@ class Drone:
 
     def set_status(self, status: DroneState) -> None:
         """Set the drone's state to the specified status."""
+
         self.state = status
 
     def __repr__(self) -> str:
