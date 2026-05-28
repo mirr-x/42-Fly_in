@@ -37,10 +37,19 @@ make lint
   turn by turn with zone/connection occupancy tracking.
 
 ## Visual Representation
-The simulation outputs one line per turn containing the movement tokens
-(`D<ID>-<zone>` or `D<ID>-<connection>`). This textual trace provides a clear
-step-by-step visualization of drone progress. (Color metadata is parsed but not
-rendered yet.)
+The project now renders a fullscreen Pygame view of the network in addition to
+the textual turn output.
+
+- Drone colors reflect their current state.
+- Planned paths are shown as faint overlays.
+- Zone capacity is displayed as `current/max`.
+- Drone markers are offset when multiple drones share the same zone.
+- `SPACE` pauses or resumes the simulation.
+- `UP` and `DOWN` adjust the simulation speed.
+
+The simulation still prints one line per turn containing the movement tokens
+(`D<ID>-<zone>` or `D<ID>-<connection>`), so the terminal output remains useful
+for debugging and grading.
 
 ## Resources
 - Dijkstra's algorithm: https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm
@@ -49,5 +58,5 @@ rendered yet.)
 - BFS (Breadth-First Search): https://www.geeksforgeeks.org/dsa/breadth-first-search-or-bfs-for-a-graph/
 
 **AI usage:**  was used to review requirements and generate tooling
-updates (Makefile, .gitignore, README) and to assist with code audits. All
+updates (.gitignore, README) and to assist with pygame logic. All
 changes were reviewed and understood before applying.
