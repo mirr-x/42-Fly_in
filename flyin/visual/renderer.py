@@ -85,7 +85,7 @@ class Renderer:
                 )
 
                 text = self.font.render(drone.id, True, TEXT)
-                self.screen.blit(text, (x + 20, y - 40))
+                self.screen.blit(text, (x + 40, y - 60))
                 self.pygame.display.flip()
                 self.pygame.time.delay(300)
 
