@@ -45,6 +45,7 @@ class ColorZone(Enum):
     DARKRED = (139, 0, 0)
     VIOLET = (238, 130, 238)
     CRIMSON = (220, 20, 60)
+    RAINBOW = (255, 141, 161)
 
 
 class MapsTool(Enum):
