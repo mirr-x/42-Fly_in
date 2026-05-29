@@ -1,5 +1,7 @@
 """Simulator module for simulating drone movement."""
 
+import copy
+
 from flyin.parser import _errors
 from flyin.models.drone import Drone
 from flyin.models.connection import Connection
@@ -71,7 +73,7 @@ class Simulator:
                     f'{drone.id}-{drone.current_zone}'
                 )
         if movements:
-            print(f'turn {counter}: ' + ' '.join(movements))
+            print(' '.join(movements))
 
     def _init_all_drones_at_start_zone(self) -> None:
         start_zone = self.graph.get_start_zone()
@@ -97,8 +99,9 @@ class Simulator:
 
         counter = 1
         while self.renderer.running and not self._all_delivered():
+            previous_drones = copy.deepcopy(self.drones)
             self._process_turn(counter)
-            self.renderer.render(counter, self.drones)
+            self.renderer.render(counter, previous_drones, self.drones)
             self.state.reset_connection_usage()
             counter += 1
         self.renderer.pygame.quit()
