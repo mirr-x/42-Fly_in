@@ -51,7 +51,7 @@ class Simulator:
             return self.graph.get_connection(drone.current_zone, next_zone)
         return None
 
-    def _process_turn(self, counter: int) -> None:
+    def _process_turn(self) -> None:
         movements = []
         for drone in self.drones:
             if drone.is_delivered():
@@ -100,7 +100,7 @@ class Simulator:
         counter = 1
         while self.renderer.running and not self._all_delivered():
             previous_drones = copy.deepcopy(self.drones)
-            self._process_turn(counter)
+            self._process_turn()
             self.renderer.render(counter, previous_drones, self.drones)
             self.state.reset_connection_usage()
             counter += 1
