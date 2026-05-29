@@ -56,24 +56,15 @@ def main() -> None:
         parsed.parsing()
         assert parsed.start_zone is not None
         assert parsed.end_zone is not None
-        print_zones_and_connections(
-            parsed.graph.zones,
-            parsed.graph.connections
-        )
         # finding path phase
         dijkstra = Dijkstra(parsed.graph)
-        all_shortest_path = dijkstra.run(
+        dijkstra.run(
             parsed.start_zone,
             parsed.end_zone
         )
-        print(all_shortest_path)
-        print(len(all_shortest_path))
         # visualution full map and drones phase
         renderer = Renderer(parsed.graph)
         # drone simulations phase
-        print()
-        print(parsed.graph.drones)
-        print()
         simulation_engein = Simulator(
             parsed.graph.drones,
             parsed.graph,
