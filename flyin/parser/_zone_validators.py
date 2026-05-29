@@ -67,7 +67,7 @@ def _validate_meta_data(val: str, line_n: int) -> MetaData:
         raise _errors.InvalidFormatError(
                 'hub invalid formal <name> <x> <y> '
                 f'optional[metadata] At line {line_n}')
-    val = val[1:-1]
+    val = val[1:-1].strip()
     if not val.strip():
         raise _errors.InvalidFormatError(f'Empty metaData At line {line_n}')
     parts = val.split(" ")
