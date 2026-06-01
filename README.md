@@ -59,7 +59,8 @@ for debugging and grading.
 - Dijkstra's algorithm: https://www.geeksforgeeks.org/dsa/dijkstras-shortest-path-algorithm-greedy-algo-7/
 - Dijkstra visualization: https://www.cs.usfca.edu/~galles/visualization/Dijkstra.html
 - BFS (Breadth-First Search): https://www.geeksforgeeks.org/dsa/breadth-first-search-or-bfs-for-a-graph/
+- Pygame offical DOCS: https://www.pygame.org/docs/
 
-**AI usage:**  was used to review requirements and generate tooling
+**AI usage:**  was used to review requirements
 updates (.gitignore, README) and to assist with pygame logic. All
 changes were reviewed and understood before applying.
