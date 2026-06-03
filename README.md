@@ -60,6 +60,7 @@ for debugging and grading.
 - Dijkstra visualization: https://www.cs.usfca.edu/~galles/visualization/Dijkstra.html
 - BFS (Breadth-First Search): https://www.geeksforgeeks.org/dsa/breadth-first-search-or-bfs-for-a-graph/
 - Pygame offical DOCS: https://www.pygame.org/docs/
+- my owm notion DOCS: https://app.notion.com/p/Fly-in-342e6e3c12ea80788408fc20632b40a7?source=copy_link
 
 **AI usage:**  was used to review requirements
 updates (.gitignore, README) and to assist with pygame logic. All
