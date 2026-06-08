@@ -33,8 +33,7 @@ class Renderer:
         # create a fullscreen window and use the actual display size
         info = self.pygame.display.Info()
         screen_w, screen_h = info.current_w, info.current_h
-        flags = getattr(self.pygame, "FULLSCREEN", 0)
-        self.screen = self.pygame.display.set_mode((screen_w, screen_h), flags)
+        self.screen = self.pygame.display.set_mode((screen_w, screen_h))
         self.width = screen_w
         self.height = screen_h
         self.pygame.display.set_caption("Fly-in Graph Viewer")
@@ -106,7 +105,7 @@ class Renderer:
             text = self.font.render(zone.name, True, TEXT)
             text_pos = (
                 x + self.zone_radius + 6,
-                y - self.zone_radius - 8,
+                y - self.zone_radius - 18,
             )
             self.screen.blit(text, text_pos)
 
@@ -143,6 +142,7 @@ class Renderer:
         drones: List[Drone],
     ) -> None:
         """Animate and render between previous and current drones."""
+
         self.clock.tick(60)
         self.handle_events()
 
@@ -224,5 +224,3 @@ class Renderer:
                 self.delay_ms = min(
                     self.max_delay_ms, self.delay_ms + self.delay_step
                 )
-
-            print(f"Speed: {self.delay_ms}ms")
