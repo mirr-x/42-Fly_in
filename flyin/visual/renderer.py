@@ -39,7 +39,7 @@ class Renderer:
         self.pygame.display.set_caption("Fly-in Graph Viewer")
         self.clock = pygame.time.Clock()
         self.animation_clock = pygame.time.Clock()
-        self.font = pygame.font.SysFont("Arial", 14)
+        self.font = pygame.font.SysFont("Arial", 12)
         self.small_font = pygame.font.SysFont("Arial", 10)
 
         # interaction + pacing
