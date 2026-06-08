@@ -90,5 +90,5 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         logging.exception('Execution interrupted by user')
         sys.exit(130)
-    # except Exception as unexpected_error:  # [broad-exception-caught]
-    #     logging.exception('Unexpected error: %s', unexpected_error)
+    except Exception as unexpected_error:
+        logging.exception('Unexpected error: %s', unexpected_error)
