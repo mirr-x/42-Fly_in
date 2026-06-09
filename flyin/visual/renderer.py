@@ -1,6 +1,12 @@
 """Phase 2: Pygame graph renderer."""
+import logging
 
-import pygame
+try:
+    import pygame
+except ImportError:
+    logging.error('WARNING: install pygame first')
+    exit(1)
+
 from typing import Dict, Tuple, List, Optional
 
 from flyin.models.drone import Drone
@@ -132,7 +138,7 @@ class Renderer:
     def draw_turn(self, turn: int) -> None:
         """Render the current turn counter on screen."""
         text = self.font.render(f"Turn: {turn}", True, TEXT)
-        y = self.height - text.get_height() - 10
+        y = self.height - text.get_height() - 80
         self.screen.blit(text, (10, y))
 
     def render(
