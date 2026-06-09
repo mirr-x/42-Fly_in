@@ -1,10 +1,11 @@
 """Phase 2: Pygame graph renderer."""
+
 import logging
 
 try:
     import pygame
 except ImportError:
-    logging.error('WARNING: install pygame first')
+    logging.warning('install pygame first')
     exit(1)
 
 from typing import Dict, Tuple, List, Optional
