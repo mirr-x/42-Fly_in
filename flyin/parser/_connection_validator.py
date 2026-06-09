@@ -26,7 +26,7 @@ def _validate_meta_data_con(val: str, line_n: int) -> MetaData:
         raise _errors.InvalidFormatError(
                 'connction invalid format <zone_A>-<zone_B> '
                 f'optional[metadata] At line {line_n}')
-    val = val[1:-1]
+    val = val[1:-1].strip()
     if not val.strip():
         raise _errors.InvalidFormatError(f'Empty metaData At line {line_n}')
     parts = val.split(" ")
