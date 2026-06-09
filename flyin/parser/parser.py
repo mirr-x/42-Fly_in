@@ -103,6 +103,9 @@ class Parser:
                     striped = line.strip()
                     if not striped or striped.startswith('#'):
                         continue
+                    # Remove inline comments
+                    if '#' in striped:
+                        striped = striped.split('#')[0].strip()
                     key, val = _validate_missing_key_val(striped, ':', line_n)
                     if first_data_line and key != 'nb_drones':
                         raise _errors.InvalidFormatError(
