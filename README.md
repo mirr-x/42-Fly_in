@@ -1,6 +1,10 @@
 
 <img src="https://github.com/mirr-x/42-CC-1337/blob/main/images/flyin.png" alt="42 Porto Common Core Banner" />
 
+
+<img src="https://github.com/mirr-x/42-CC-1337/blob/main/gif/fly_in_recording-ezgif.com-optimize.gif" alt="42 Porto Common Core Banner" />
+
+
 *This project has been created as part of the 42 curriculum by molahrac.*
 
 ## Description
